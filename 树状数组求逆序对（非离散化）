@@ -1,0 +1,41 @@
+var
+n,i,k:longint;
+p,x,c:array [0..100001] of longint;
+function lowbit(x:longint):longint;
+begin
+  lowbit:=(-x) and x;
+end;
+
+procedure change(x:longint);
+//更新节点
+begin
+  while (x<=n) do
+    begin
+      c[x]:=c[x]+1;
+      x:=x+lowbit(x);//是他父亲的节点都要加上这个点
+    end;
+end;
+
+function sum(x:longint):longint;
+var s:longint;
+begin
+  s:=0;
+  while x>0 do
+    begin
+      s:=s+c[x];//求和
+      x:=x-lowbit(x);//递减，从后向前累加节点
+    end;
+  sum:=s;
+end;
+
+begin
+  readln(n);
+  for i:=1 to n do
+    read(p[i]);
+  for i:=1 to n do
+    begin
+      change(p[i]);//改变p[i]位置的值
+      k:=k+(i-sum(p[i]));//逆着来求逆序对个数，也就是前面比他大的个数。
+    end;
+  writeln(k);
+end.
