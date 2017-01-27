@@ -1,0 +1,44 @@
+var
+n,m,i,x,flag,y,t:longint;
+e:array [0..500001] of longint;
+function lowbit(x:longint):longint;
+begin
+  lowbit:=(-x) and x;//公式，位运算
+end;
+
+procedure change(x,delta:longint);
+begin
+  while x<=n do
+    begin
+      e[x]:=e[x]+delta;//加上需要添加的数字
+      x:=x+lowbit(x);//寻找x的后继，因为后继的前驱是x，x加上了数，所以后继也要加上数
+    end;
+end;
+
+function sum(x:longint):longint;
+var s:longint;
+begin
+  s:=0;
+  while x>0 do
+    begin
+      s:=s+e[x];//计算结果
+      x:=x-lowbit(x);//前驱，后继是由前驱得来的
+    end;
+  sum:=s;
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do
+  begin
+    read(x);
+    change(i,x);//放入数组中，
+  end;
+  for i:=1 to m do
+    begin
+      read(flag);
+      if flag=1 then begin read(x,t);change(x,t);end;//更改
+      if flag=2 then begin read(x,y);writeln(sum(y)-sum(x-1));end;
+//类似前缀和的方式计算结果
+    end;
+end.
