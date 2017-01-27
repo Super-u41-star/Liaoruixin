@@ -1,0 +1,44 @@
+var
+n,m,i,x,flag,y,t:longint;
+e:array [0..500001] of longint;
+function lowbit(x:longint):longint;
+begin
+  lowbit:=(-x) and x;
+end;
+
+procedure change(x,delta:longint);
+begin
+  while x<=n do
+    begin
+      e[x]:=e[x]+delta;
+      x:=x+lowbit(x);
+    end;
+end;
+
+function sum(x:longint):longint;
+var s:longint;
+begin
+  s:=0;
+  while x>0 do
+    begin
+      s:=s+e[x];
+      x:=x-lowbit(x);
+    end;
+  sum:=s;
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do
+  begin
+    read(x);
+    change(i,x);
+    change(i+1,-x);
+  end;
+  for i:=1 to m do
+    begin
+      read(flag);
+      if flag=1 then begin read(x,y,t);change(x,t);change(y+1,-t);end;
+      if flag=2 then begin read(t);writeln(sum(t));end;
+    end;
+end.
