@@ -1,29 +1,30 @@
 var
-n,i,k:longint;
-p,x,c:array [0..100001] of longint;
-function lowbit(x:longint):longint;
+n,i,temp:longint;
+k:int64; 
+p,c:array [0..100001] of longint;
+function lowbit(x:int64):int64;
 begin
   lowbit:=(-x) and x;
 end;
 
-procedure change(x:longint);
-//更新节点
+procedure change(x:int64);
 begin
+//从前向后更新节点
   while (x<=n) do
     begin
       c[x]:=c[x]+1;
-      x:=x+lowbit(x);//是他父亲的节点都要加上这个点
+      x:=x+lowbit(x);//更新它的父亲节点
     end;
 end;
 
-function sum(x:longint):longint;
+function sum(x:int64):int64;
 var s:longint;
 begin
   s:=0;
   while x>0 do
     begin
-      s:=s+c[x];//求和
-      x:=x-lowbit(x);//递减，从后向前累加节点
+      s:=s+c[x];
+      x:=x-lowbit(x);//从后向前求和节点
     end;
   sum:=s;
 end;
@@ -34,8 +35,10 @@ begin
     read(p[i]);
   for i:=1 to n do
     begin
-      change(p[i]);//改变p[i]位置的值
-      k:=k+(i-sum(p[i]));//逆着来求逆序对个数，也就是前面比他大的个数。
+      change(p[i]);
+      k:=k+(i-sum(p[i]));
     end;
   writeln(k);
 end.
+
+//请注意，此题不可以用longint，从数据方面来看，只可用int64解决问题
