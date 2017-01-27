@@ -1,4 +1,4 @@
-var
+var 
 n,i,temp:longint;
 k:int64; 
 p,c:array [0..100001] of longint;
@@ -42,3 +42,4 @@ begin
 end.
 
 //请注意，此题不可以用longint，从数据方面来看，只可用int64解决问题
+
