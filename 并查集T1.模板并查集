@@ -1,0 +1,27 @@
+var
+n,m,i,z,a,b,fa,fb:longint;
+f:array [0..10010] of longint;
+
+function search(p:longint):longint;//路径压缩
+begin
+  if f[p]=p then exit(f[p]);
+  f[p]:=search(f[p]);
+  exit(f[p]);
+end;
+
+procedure union(fa,fb:longint);
+begin
+  if fa>fb then f[fa]:=fb else f[fb]:=fa;
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do f[i]:=i;
+  for i:=1 to m do
+    begin
+      readln(z,a,b);
+      if z=1 then begin fa:=search(a);fb:=search(b);union(fa,fb);end;
+      if z=2 then
+        if search(a)<>search(b) then writeln('N') else writeln('Y');
+    end;
+end.
