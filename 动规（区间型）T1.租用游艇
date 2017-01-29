@@ -1,0 +1,23 @@
+var
+f:array [0..210,0..210] of longint;
+n,i,j,k:longint;
+function min(x,y:longint):longint;
+begin
+  if x>y then exit(y) else exit(x);
+end;
+
+begin
+  readln(n);
+  fillchar(f,sizeof(f),$7f);//初始化
+  for i:=1 to n-1 do
+    begin
+      for j:=i+1 to n do
+        read(f[i,j]);
+      readln;
+    end;
+  for i:=1 to n do
+    for j:=i+1 to n do
+      for k:=i+1 to j-1 do
+      f[i,j]:=min(f[i,j],f[i,k]+f[k,j]);//DP方程
+  writeln(f[1,n]);//输出
+end.
