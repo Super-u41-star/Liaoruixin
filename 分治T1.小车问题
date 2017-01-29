@@ -1,0 +1,15 @@
+var
+s,vr,vc,l,r,mids,tj,ty,a1:real;
+begin
+  readln(s,vr,vc);
+  l:=1;r:=s;
+  repeat
+    mids:=(l+r)/2;
+    tj:=mids/vc+(s-mids)/vr;
+    a1:=((mids-mids/vc*vr)/(vr+vc)+(mids/vc))*vr;
+    ty:=mids/vc+(mids-mids/vc*vr)/(vr+vc)+(s-a1)/vc;
+    if tj>ty then l:=mids else r:=mids;
+  until abs(tj-ty)<=0.0000001;
+  writeln(tj:0:6);
+end.
+
