@@ -1,0 +1,49 @@
+var
+n,m,i,x,y,k:longint;
+e:array [0..1000001] of longint;
+st,s1:string;
+
+function lowbit(x:longint):longint;
+begin
+  lowbit:=(-x) and x;
+end;
+
+procedure change(x,delta:longint);
+begin
+  while x<=n do
+    begin
+      e[x]:=e[x]+delta;
+      x:=x+lowbit(x);
+    end;
+end;
+
+function sum(x:longint):longint;
+var
+s:longint;
+begin
+  s:=0;
+  while x>0 do
+  begin
+    s:=s+e[x];
+    x:=x-lowbit(x);
+  end;
+  sum:=s;
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do
+    begin read(k);change(i,k);end;
+  readln;
+  for i:=1 to m do
+    begin
+      readln(st);
+      s1:=copy(st,1,pos(' ',st)-1);
+      delete(st,1,pos(' ',st));
+      val(copy(st,1,pos(' ',st)-1),x);
+      delete(st,1,pos(' ',st));
+      val(st,y);
+      if s1='QUERY' then writeln(sum(y)-sum(x-1));
+      if s1='ADD' then change(x,y);
+    end;
+end.
