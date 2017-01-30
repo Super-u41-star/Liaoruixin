@@ -1,0 +1,23 @@
+uses math;
+
+var
+n,m,i,j,k,x,y,z:longint;
+f:array [0..101,0..101] of longint;
+begin
+  repeat
+    readln(n,m);
+    if (n=0) and (m=0) then exit;
+    fillchar(f,sizeof(f),$3f);
+    for i:=1 to m do
+      begin
+        readln(x,y,z);f[x,y]:=z;f[y,x]:=z;
+      end;
+    for k:=1 to n do
+      for i:=1 to n do
+        for j:=1 to n do
+          if (i<>j) and (j<>k) and (k<>i) then
+          f[i,j]:=min(f[i,j],f[i,k]+f[k,j]);
+    writeln(f[1,n]);
+  until 0=1;
+end.
+//不用想太多，直接用弗洛伊德，因为n<=100，最短路径的裸题
