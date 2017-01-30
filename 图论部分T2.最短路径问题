@@ -1,0 +1,67 @@
+var
+n,m,i,s,e,a,b,d,p:longint;
+visit:array [0..1010] of boolean;
+map:array [0..1010,0..1010,0..1] of longint;//0记录i到j的当前最短路程，1记录i到j的当前最小花费
+t,cost:array [0..1010] of longint;
+flag:boolean;
+function min(x,y:longint):longint;
+begin
+  if x>y then exit(y) else exit(x);
+end;
+//两数中选择较小
+begin
+  repeat
+  readln(n,m);
+//读入城市数量，路的条数
+  if (n=0) and (m=0) then exit;//不符合条件，退出
+  fillchar(map,sizeof(map),$5f);
+  fillchar(cost,sizeof(cost),$5f);
+  fillchar(t,sizeof(t),$5f);
+//赋成$7f会导致后面爆掉
+  for i:=1 to m do
+    begin
+      readln(a,b,d,p);
+      if d<map[a,b,0] then
+      begin
+      map[a,b,0]:=d; map[b,a,0]:=map[a,b,0];
+      map[a,b,1]:=p; map[b,a,1]:=map[a,b,1];end
+      else
+      if d=map[a,b,0] then
+      if p<map[a,b,1] then begin map[a,b,1]:=p;map[b,a,1]:=p;end;
+end;
+//刚才说过，之选路程短的，路程相同选费用少的，双向赋值
+  readln(s,e);
+  t[s]:=0;cost[s]:=0;
+//起点特殊判断
+  t[0]:=maxlongint div 10;
+//作为比较最小的测定值
+  fillchar(visit,sizeof(visit),false);
+//迪杰斯特拉，数组赋值
+  while true do
+    begin
+      for i:=1 to n do
+        if (not visit[i]) and (t[s]+map[s,i,0]<=t[i]) then
+        begin
+        if t[s]+map[s,i,0]<t[i]
+          then begin t[i]:=t[s]+map[s,i,0];cost[i]:=cost[s]+map[s,i,1];end
+        else if t[s]+map[s,i,0]=t[i] then cost[i]:=min(cost[i],cost[s]+map[s,i,1]);
+        end;
+//从当前起点往后找，迪杰斯特拉经典判断语句，一定注意要分等于和小于两种情况进行判断
+      flag:=true;
+      visit[s]:=true;
+      s:=0;
+//打标记
+      for i:=1 to n do
+        if (not visit[i]) and (t[i]<t[s]) then
+          begin
+            flag:=false;
+            s:=i;//记录要选的点
+          end;
+//选择更短的路
+      if flag then break;//如果都找完了，退出
+    end;
+  writeln(t[e],' ',cost[e]);
+//输出最短路径及最小花费
+  until 0=1;
+end.
+
