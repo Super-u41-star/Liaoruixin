@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+#define INF 10000
+int main()
+{
+	int i,n,m,x,y,z,j,k,s,e;
+	int f[201][201];
+	while (scanf("%d%d", &n, &m) != EOF) 
+	{
+	  memset (f, INF, sizeof(f));		
+	  for (i=1; i<=m; i++)
+	  {
+	  	scanf("%d%d%d", &x, &y, &z);
+	  	if (f[x][y]>z) f[x][y] = f[y][x]= z;
+	  }
+	  scanf("%d%d",&s,&e);
+	  for (i=0; i<n; i++) f[i][i]=0;
+	  for (k=0; k<n; k++)
+	  for (i=0; i<n; i++)
+	  for (j=0; j<n; j++)
+	  if (f[i][k]+f[k][j]<f[i][j]) f[i][j]=f[i][k]+f[k][j];
+	  if (f[s][e]>=INF) printf("%d\n",-1);
+	  else printf("%d\n",f[s][e]);
+    }  
+  return 0;  
+}
+
