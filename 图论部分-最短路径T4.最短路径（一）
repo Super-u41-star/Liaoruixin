@@ -1,0 +1,28 @@
+var
+n,i,m,k,j,a,b,d,f:longint; 
+x,y:array [0..10001] of longint; 
+map:array [0..105,0..105] of real; 
+begin
+  readln(n); 
+  for i:=1 to n do
+    begin
+      read(x[i],y[i]); 
+      readln; 
+    end; 
+  readln(m); 
+  for i:=1 to n do for j:=1 to n do map[i,j]:=maxlongint; 
+  for i:=1 to m do
+    begin
+      readln(a,b); 
+      map[a,b]:=sqrt(sqr(x[a]-x[b])+sqr(y[a]-y[b])); 
+      map[b,a]:=map[a,b]; 
+end; 
+//距离公式
+  for i:=1 to n do map[i,i]:=0; //不要忘记这一句，如果不写这一句，那么在后面判断中就要写条件
+  readln(d,f); 
+  for k:=1 to n do
+    for i:=1 to n do
+      for j:=1 to n do
+      if map[i,k]+map[k,j]<map[i,j] then map[i,j]:=map[i,k]+map[k,j]; //找中转点k解决问题
+  writeln(map[d,f]:0:2); 
+end.
