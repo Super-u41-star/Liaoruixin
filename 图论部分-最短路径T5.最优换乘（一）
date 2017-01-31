@@ -1,0 +1,30 @@
+var
+map:array [0..101,0..101] of longint; 
+a:array [0..101] of longint; 
+i,j,s,k,n,m,d,f,p:longint; 
+begin
+  readln(n,m); 
+  for i:=1 to m do for j:=1 to m do map[i,j]:=maxlongint div 3; 
+  for i:=1 to m do map[i,i]:=0; 
+  for p:=1 to n do
+    begin
+      s:=1; 
+      while not eoln do
+        begin
+          read(a[s]); 
+          s:=s+1; 
+        end; 
+      s:=s-1; 
+      readln; 
+      for i:=1 to s-1 do
+        for j:=i+1 to s do
+          map[a[i],a[j]]:=1; 
+    end; 
+  readln(d,f); 
+  for k:=1 to m do
+    for i:=1 to m do
+      for j:=1 to m do
+      if map[i,k]+map[k,j]<map[i,j] then map[i,j]:=map[i,k]+map[k,j]; 
+  if map[d,f]>=maxlongint div 3 then writeln('NO') 
+  else writeln(map[d,f]-1); 
+end.
