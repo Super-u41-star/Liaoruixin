@@ -1,0 +1,22 @@
+var
+n,d,f,i,x,k,j:longint; 
+a:array [0..501,0..501] of longint; 
+begin
+  read(n,d,f); 
+  for i:=0 to 501 do
+    for j:=0 to 501 do a[i,j]:=maxlongint div 3; 
+  for i:=1 to n do
+    begin
+      read(x); 
+      a[i,i+x]:=1; //两层有路径连接，因为电梯可以直达
+      if i-x>0 then
+      a[i,i-x]:=1; 
+    end; 
+  for i:=1 to n do a[i,i]:=0; 
+  for k:=1 to n do
+    for i:=1 to n do
+      for j:=1 to n do
+        if (i<>j) and (j<>k) and (k<>i) then
+        if a[i,k]+a[k,j]<a[i,j] then a[i,j]:=a[i,k]+a[k,j]; //最短路径求出要按多少次按钮
+  if a[d,f]>=maxlongint div 3 then writeln(-1) else writeln(a[d,f]); //输出
+end.
