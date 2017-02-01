@@ -1,0 +1,49 @@
+var
+n,i,x,y,start,tot,min,max:longint;
+a,du:array [0..1025] of longint;
+g,v:array [0..1025,0..1025] of longint;
+procedure find(i:longint);
+var j:longint;
+begin
+  for j:=min to max do//从最小点到最大点循环
+    if g[i,j]=1 then//如果两点间有通路
+    if v[i,j]=1 then//还剩最后一条边
+    begin
+      g[i,j]:=0;
+      g[j,i]:=0;//断绝两点间的关系
+      find(j);
+    end
+    else
+    begin
+      dec(v[i,j]);dec(v[j,i]);//否则只断掉一条边
+      find(j);
+    end;
+  inc(tot);//往数组a里加点
+  a[tot]:=i;
+end;
+ 
+begin
+  readln(n);
+  min:=maxlongint;
+  fillchar(g,sizeof(g),0);
+  for i:=1 to n do
+    begin
+      readln(x,y);
+      if x<min then min:=x;
+      if x>max then max:=x;
+      if y<min then min:=y;
+      if y>max then max:=y;//通过max，min两个变量来找到读入中的最大点，最小点
+      g[x,y]:=1;
+      g[y,x]:=1;//双向赋值
+      inc(v[x,y]);
+      inc(v[y,x]);//增加一条边，题目里有陷阱，两点之间可能存在多条边，这是最短路径里的一个大考点
+      du[x]:=du[x]+1;
+      du[y]:=du[y]+1;//所以各点的度数+1
+    end;
+  start:=1;
+  for i:=min to max do
+    if du[i] mod 2=1 then begin start:=i;break;end;//寻找一个奇点，作为起点
+  tot:=0;
+  find(start);//从起点开始深搜
+  for i:=1 to tot do writeln(a[tot-i+1]);//经过的点全部记录在a数组里，倒序输出
+end.
