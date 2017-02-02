@@ -1,0 +1,45 @@
+var
+n,w,t1,i,a,b:longint;
+flag:char;
+s1:string;
+e:array [0..1000001] of longint;
+function lowbit(x:longint):longint;
+begin
+  lowbit:=(-x) and x;
+end;
+
+procedure change(x,detla:longint);
+begin
+  while x<=n do
+    begin
+      e[x]:=e[x]+detla;
+      x:=x+lowbit(x);
+    end;
+end;
+
+function sum(x:longint):longint;
+var s:longint;
+begin
+  s:=0;
+  while x>0 do
+    begin
+      s:=s+e[x];
+      x:=x-lowbit(x);
+    end;
+  sum:=s;
+end;
+
+begin
+  readln(n,w);
+  for i:=1 to w do
+    begin
+      readln(s1);
+      flag:=s1[1];
+      delete(s1,1,2);
+      t1:=pos(' ',s1);
+      val(copy(s1,1,t1-1),a);
+      delete(s1,1,t1);
+      val(s1,b);
+      if flag='x' then change(a,b) else writeln(sum(b)-sum(a-1));
+    end;
+end.
