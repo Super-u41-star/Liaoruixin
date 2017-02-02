@@ -1,0 +1,35 @@
+var
+n,i,j,m,t:longint;
+f,s,a:array [0..2501] of longint;
+function min(x,y:longint):longint;
+begin
+if x<y then exit(x) else exit(y);
+end;
+
+begin
+readln(n,m);
+//读入n和m，n为人数，m为一个机房内两种粉丝差值的最大数
+for i:=1 to n do
+begin read(a[i]);
+case a[i] of
+1:s[i]:=s[i-1]+1;
+2:s[i]:=s[i-1]-1;
+end;
+//part 1，将两类人分别归纳成1，-1，求前缀和
+if (abs(s[i])<=m) or (abs(s[i])=i) then f[i]:=1;
+//part 2,边界条件的判断
+end;
+for i:=1 to n do
+begin
+if f[i]=1 then continue;
+//part 3之优化部分，如果为1，则跳过
+t:=maxlongint;
+//求最小找最大
+for j:=1 to i-1 do if (abs(s[i]-s[j])<=m) or (abs(s[i]-s[j])=i-j) 
+//判断，将其分解成1-j共拥有f[j]个机房，j+1至i有一个机房，因为f[j]已经求好，则我们需要让j+1至i满足条件，因为是j+1-》i，所以才写成s[i]-s[j]
+then t:=min(f[j]+1,t);//找最小值
+f[i]:=t;//记录下来
+end;
+writeln(f[n]);//输出
+end.
+
