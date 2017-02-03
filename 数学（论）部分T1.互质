@@ -1,0 +1,38 @@
+var
+n,n1,i,m,t,k:longint;
+s:real;
+a:array [0..10001] of longint;
+begin
+  readln(n);
+  while n<>0 do
+    begin
+      n1:=n;
+      k:=trunc(sqrt(n1));
+      fillchar(a,sizeof(a),0);
+      m:=0;
+      for i:=2 to k do
+        if n1 mod i=0 then
+          begin
+            inc(m);
+            a[m]:=i;
+            t:=0;
+            while n1 mod i=0 do
+              begin
+                inc(t);
+                n1:=n1 div i;
+              end;
+          end;
+          //质因数分解
+      if n1<>1//没有分解完，则剩下的那一个就是最后一个质因数
+      then
+      begin
+      a[m+1]:=n1;
+      inc(m);
+      end;
+      s:=n;
+      for i:=1 to m do
+        s:=s*(1-1/a[i]);
+      writeln(s:0:0);//按公式来搞定
+      readln(n);
+    end;
+end.
