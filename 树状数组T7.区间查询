@@ -1,0 +1,69 @@
+var
+t,p,i,t1,x1,y1,n:longint;
+s1,st:ansistring;
+e:array [0..30001] of int64;
+ 
+function lowbit(x:longint):longint;
+begin
+  lowbit:=(-x) and x;
+end;
+ 
+procedure changeadd(x,delta:longint);
+begin
+  while x<=n do
+    begin
+      e[x]:=e[x]+delta;
+      x:=x+lowbit(x);
+    end;
+end;
+ 
+procedure changesub(x,delta:longint);
+begin
+  while x<=n do
+    begin
+      e[x]:=e[x]-delta;
+      x:=x+lowbit(x);
+    end;
+end;
+ 
+function sum(x:longint):int64;
+var s:longint;
+begin
+  s:=0;
+  while x>0 do
+    begin
+      s:=s+e[x];
+      x:=x-lowbit(x);
+    end;
+  sum:=s;
+end;
+ 
+begin
+  readln(t);
+  for p:=1 to t do
+    begin
+      writeln('Case ',p,':');
+      fillchar(e,sizeof(e),0);
+      readln(n);
+      for i:=1 to n do
+        begin
+          read(x1);
+          changeadd(i,x1);
+        end;
+      readln(st);
+      while st<>'End' do
+        begin
+          t1:=pos(' ',st);
+          s1:=copy(st,1,t1-1);
+          delete(st,1,t1);
+          t1:=pos(' ',st);
+          val(copy(st,1,t1-1),x1);
+          delete(st,1,t1);
+          val(st,y1);
+          if s1='Add' then changeadd(x1,y1);
+          if s1='Sub' then changesub(x1,y1);
+          if s1='Query' then writeln(sum(y1)-sum(x1-1));
+          readln(st);
+        end;
+    end;
+end.
