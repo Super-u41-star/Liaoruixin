@@ -1,0 +1,58 @@
+var
+n,k,i,d,x,y,total,xf,yf:longint;
+father,rank:array [0..500001] of longint;
+
+procedure sent(x:longint);
+begin
+  father[x]:=x;
+  rank[x]:=0;
+end;
+
+function find(x:longint):longint;
+var t:longint;
+begin
+  if x<>father[x] then
+  begin
+    t:=father[x];
+    father[x]:=find(father[x]);
+rank[x]:=(rank[x]+rank[t]) mod 3;
+//根据自己和父节点情况计算关系
+  end;
+  exit(father[x]);//路径压缩
+end;
+
+procedure union(x,y,d:longint);
+var xf,yf:longint;
+begin
+  xf:=find(x);
+  yf:=find(y);
+  father[xf]:=yf;
+  rank[xf]:=(rank[y]-rank[x]+3+d) mod 3;
+//+3是为了防止负数，+d相当于做标记，在下次起到标记作用
+end;
+
+begin
+  readln(n,k);
+//读入动物的个数N，以及话的数量K
+  for i:=1 to n do
+sent(i);
+//初始化，并查集赋初值，rank数组清空
+  for i:=1 to k do
+    begin
+      readln(d,x,y);
+      if (x>n) or (y>n) or (d=2) and (x=y) then inc(total)
+//如有：超过总数，自相矛盾的情况记作假话
+      else
+      begin
+        xf:=find(x);
+        yf:=find(y);
+        if (xf=yf) then
+        begin
+        if (rank[x]-rank[y]+3) mod 3<>d-1 then inc(total);
+        end
+//运用刚才所提到的公式
+        else union(x,y,d-1);//两集he两集合合并
+      end;
+    end;
+  writeln(total);
+end.
