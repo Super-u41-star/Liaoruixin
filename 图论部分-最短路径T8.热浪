@@ -1,0 +1,31 @@
+var
+n,m,s,e,x,y,z,min,k,i,j:longint;
+a:array [0..2501,0..2501] of longint;
+dis:array [0..2501] of longint;
+b:array [0..2501] of boolean;
+
+begin
+  readln(n,m,s,e);
+  fillchar(a,sizeof(a),$3f);
+  for i:=1 to m do
+    begin
+      readln(x,y,z);
+      a[x,y]:=z;
+      a[y,x]:=z;
+    end;
+  fillchar(b,sizeof(b),false);
+  for i:=1 to n do
+    dis[i]:=a[s,i];
+  for i:=1 to n-1 do
+    begin
+      k:=0;min:=maxlongint;
+      for j:=1 to n do
+        if (not b[j]) and (dis[j]<min) then
+          begin k:=j;min:=dis[j];end;
+      if k=0 then break;
+      b[k]:=true;
+      for j:=1 to n do
+        if (not b[j]) and (dis[k]+a[k,j]<dis[j]) then dis[j]:=dis[k]+a[k,j];
+    end;
+  writeln(dis[e]);
+end.
