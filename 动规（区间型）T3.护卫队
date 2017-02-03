@@ -1,0 +1,27 @@
+var
+max,n,len:int64;
+maxw,min:extended;
+i,j:longint;
+w,v,f:array [0..1001] of extended;//一定要定义大，否则WA
+begin
+  readln(max,len,n);
+  for i:=1 to n do
+    readln(w[i],v[i]);
+  f[0]:=0;
+  f[1]:=len/v[1];
+  for i:=2 to n do
+    begin
+      f[i]:=1e24;//f[i]代表前i辆车通过的最少时间
+      min:=1e24;//找最小值，必选最大，定义小了就WA了！
+      maxw:=0;
+      for j:=i downto 1 do
+        begin
+          maxw:=maxw+w[j];//往前找，加上自身的重量
+          if v[j]<min then min:=v[j];//过桥时间取决于速度最小的那辆车
+          if maxw>max then break;//超出，就退出
+          if (min<>0) and (f[j-1]+len/min<f[i]) then f[i]:=f[j-1]+len/min;//十分巧妙，放在退出句的后面，使得超出max范围的就不做了
+//如果从第j辆车的后面一辆开始走，路程为len，速度为min，从f[j-1]的时间开始走起
+        end;
+    end;
+  writeln(f[n]*60:0:1);//转换成分钟
+end.
