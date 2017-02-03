@@ -1,0 +1,19 @@
+var
+n,m,x,y,k:int64;
+i,j:longint;
+begin
+  while not eof do
+  begin
+    x:=0;
+    readln(n);
+    for i:=1 to n do
+      begin
+        read(m);
+        y:=0;
+        for j:=1 to m do begin read(k);y:=y xor k;end;
+        x:=x xor y;
+      end;
+    writeln(x);
+    readln;
+  end;
+end.
