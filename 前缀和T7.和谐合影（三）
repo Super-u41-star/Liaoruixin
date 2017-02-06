@@ -1,0 +1,111 @@
+代码1{蒟蒻算法}
+var n,i,tot,ans:longint;
+c:char;
+a,b:array [0..1000003] of longint;
+q:array [-1000003..1000003] of longint;
+flag:array [-100003..1000003] of boolean;
+procedure qsort(low,high:Longint);
+var i,j,mid,temp:longint;
+begin
+  i:=low;j:=high;mid:=a[(i+j) div 2];
+  repeat
+	while a[i]<mid do i:=i+1;
+	while a[j]>mid do j:=j-1;
+	if i<=j then  begin
+		temp:=a[i];a[i]:=a[j];a[j]:=temp;
+	    temp:=b[i];b[i]:=b[j];b[j]:=temp;inc(i);dec(j);end;
+  until i>j;
+  if i<high then qsort(i,high);
+  if j>low then qsort(low,j);
+end;
+
+function min(x,y:longint):longint;
+begin
+  if x>y then exit(y) else exit(x);
+end;
+
+function max(x,y:longint):longint;
+begin
+  if x>y then exit(x) else exit(y);
+end;
+
+begin
+  readln(n);
+  fillchar(q,sizeof(q),$7f);
+  fillchar(a,sizeof(a),$7f);//为后面的大小比较奠定基础，不写就错
+  for i:=1 to n do
+    begin
+      readln(a[i],c,c);
+      if c='W' then b[i]:=-1 else b[i]:=1;//我们可以把题目中的要求给改一下，0换成-1，这样方便我们在前缀和中的处理
+    end;
+  qsort(1,n);
+  tot:=0;
+  fillchar(flag,sizeof(flag),0);
+  for i:=1 to n do
+    begin
+      tot:=tot+b[i];
+      if (not flag[tot]) then begin q[tot]:=i;flag[tot]:=true;end;//如果没有打过标记，则可以放上去，q[tot]代表前缀和为tot的第一个位置
+    end;
+  q[0]:=0;//补丁，必打，不写就错
+  for i:=n downto -n do
+    q[i]:=min(q[i+2],q[i]);//我们可以看出来，将-1改成1，增加了2，所以比较q[i+2],q[i]的大小
+  ans:=0;
+  tot:=0;
+  for i:=1 to n do
+    begin
+      tot:=tot+b[i];//tot计算前缀和
+      ans:=max(ans,a[i]-a[q[tot]+1]);//和前面一样
+    end;
+  writeln(ans);
+end.
+
+---------------------------------------------------这是一道华丽的分割线---------------------------------------------------
+代码2{神奇算法}
+//主要思路：将-n至n更换成0-2n，将q[tot]环节优化成距离，而并不是第一次出现的位置，代码简洁了，空间小了，效率高了
+uses math;
+ 
+var n,i,tot,ans:longint;
+c:char;
+a,b,q:array [0..2000001] of longint;
+procedure qsort(low,high:Longint);
+var i,j,mid,temp:longint;
+begin
+  i:=low;j:=high;mid:=a[(i+j) div 2];
+  repeat
+    while a[i]<mid do i:=i+1;
+    while a[j]>mid do j:=j-1;
+    if i<=j then  begin
+        temp:=a[i];a[i]:=a[j];a[j]:=temp;
+        temp:=b[i];b[i]:=b[j];b[j]:=temp;inc(i);dec(j);end;//交换a时交换b，整体排
+  until i>j;
+  if i<high then qsort(i,high);
+  if j>low then qsort(low,j);
+end;
+ 
+begin
+  readln(n);
+  for i:=1 to n do
+    begin
+      readln(a[i],c,c);
+      if c='W' then b[i]:=-1 else b[i]:=1;//转换，方便处理
+    end;
+  qsort(1,n);//快速排序，整体排
+  fillchar(q,sizeof(q),$3f);
+  q[n]:=a[1];//边缘条件，这里的q[n]相当于代码1中的q[0]，但意义不同，这里表示距离，而上面表示的点
+  tot:=n;//从n开始，为下文“非负前缀和”埋下伏笔
+  for i:=1 to n-1 do
+    begin
+      tot:=tot+b[i];
+      q[tot]:=min(q[tot],a[i+1]);//直接往q数组里存距离
+    end;
+  for i:=2*n downto 0 do
+    q[i]:=min(q[i+2],q[i]);//已经成功的将负数转移，像代码1一样更新数据，使得当前最优
+  ans:=0;
+  tot:=n;//tot从n开始，为的是保持所有数都集中在正数的情况
+  for i:=1 to n do
+    begin
+      tot:=tot+b[i];//计算“非负版”前缀和
+      ans:=max(ans,a[i]-q[tot]);//直接当前距离-起始距离，真的很妙啊！
+    end;
+  writeln(ans);//打擂台后输出结果
+end.
