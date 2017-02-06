@@ -1,0 +1,48 @@
+var
+n,i:longint;
+ans:int64;
+sw:string;
+flag:char;
+c:array [0..200000] of char;
+first,s,a:array [-200001..200001] of int64;
+function max(x,y:int64):int64;
+begin
+  if x>y then exit(x) else exit(y);
+end;
+ 
+procedure qsort(low,high:Longint);
+var i,j,mid,temp:longint;ctemp:char;
+begin
+  i:=low;j:=high;mid:=a[(i+j) div 2];
+  repeat
+    while a[i]<mid do i:=i+1;
+    while a[j]>mid do j:=j-1;
+    if i<=j then  begin
+        temp:=a[i];a[i]:=a[j];a[j]:=temp;
+        ctemp:=c[i];c[i]:=c[j];c[j]:=ctemp;inc(i);dec(j);end;
+  until i>j;
+  if i<high then qsort(i,high);
+  if j>low then qsort(low,j);
+end;
+ 
+begin
+  readln(n);
+  fillchar(a,sizeof(a),$7f);//此句也是补丁,控制a的大小，以免后面打擂台时出故障
+  for i:=1 to n do
+    begin
+      read(a[i],c[i],c[i]);
+    end;
+  qsort(1,n);
+  for i:=1 to n do
+    begin
+          if c[i]='B' then s[i]:=s[i-1]+1;
+      if c[i]='G' then s[i]:=s[i-1]-1;//读入并求前缀和
+    end;
+  if abs(s[n])=n then begin writeln(0);exit;end;//补丁登场！
+  for i:=1 to n do
+    if first[s[i]]=0 then first[s[i]]:=i;//记录前缀和为s[i]第一次出现的位置，i
+  first[0]:=0;//补丁再次登场！
+  for i:=2 to n do
+    ans:=max(ans,a[i]-a[first[s[i]]+1]);
+  writeln(ans);
+end.
