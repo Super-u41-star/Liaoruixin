@@ -1,0 +1,19 @@
+var
+st:ansistring;
+i,n,max:longint;
+first,s:array [-1000001..1000001] of longint;
+begin
+  readln(st);
+  n:=length(st);
+  for i:=1 to n do
+    begin
+      if st[i]='B' then s[i]:=s[i-1]+1;
+      if st[i]='G' then s[i]:=s[i-1]-1;//前缀和，本题主要思路
+    end;
+  for i:=1 to n do
+    if first[s[i]]=0 then first[s[i]]:=i;//按照s[i]的第一个位置来看
+  first[0]:=0;//重要，初始化，拿满分的关键所在！
+  for i:=1 to n do
+    if i-first[s[i]]>max then max:=i-first[s[i]];//通过相减得出距离，并打擂台
+  writeln(max);//输出
+end.
