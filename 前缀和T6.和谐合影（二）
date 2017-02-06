@@ -1,0 +1,53 @@
+var
+max1,max2,tot:int64;
+n,i:longint;
+endl,start:array [-100001..100001] of int64;
+a,s:array [0..100001] of int64;
+c:array [0..100001] of char;
+
+procedure qsort(low,high:Longint);
+var i,j,mid,temp:longint;ctemp:char;
+begin
+  i:=low;j:=high;mid:=a[(i+j) div 2];
+  repeat
+	while a[i]<mid do i:=i+1;
+	while a[j]>mid do j:=j-1;
+	if i<=j then  begin
+		temp:=a[i];a[i]:=a[j];a[j]:=temp;
+	    ctemp:=c[i];c[i]:=c[j];c[j]:=ctemp;inc(i);dec(j);end;
+  until i>j;
+  if i<high then qsort(i,high);
+  if j>low then qsort(low,j);
+end;
+
+begin
+  readln(n);
+  for i:=1 to n do
+    readln(a[i],c[i],c[i]);
+  qsort(1,n);
+  for i:=1 to n do
+  begin
+    if c[i]='B' then s[i]:=s[i-1]+1;
+    if c[i]='G' then s[i]:=s[i-1]-1;
+  end;
+  //前缀和
+  c[n+1]:='A';//为了同前面的B、G两字符区别开来，我特意使用了另外一个字母，能保证比较字符不同的时候直接跳出。
+  tot:=1;
+  max1:=0;max2:=0;
+  //因为本题中多加了一个条件，也就是照片中可以全部出现男生和女生，所以我们用max1来记录男生和女生相同的连起来最长是多少，
+  //max2来记录男生和女生相等的最大距离是多少，然后再比较max1和max2的大小即可
+  for i:=2 to n+1 do
+      if c[i]<>c[i-1] then begin if a[i-1]-a[tot]>max1 then max1:=a[i-1]-a[tot];tot:=i;end;
+  //多彩链的经典写法，比较相邻的两个字符可相等，如果不相等，则用当前位置减去上一次出现断点的位置，则为当前这一段相同字符连起来的距离，当场打擂台
+  a[n+1]:=maxlongint;//也是一个补丁
+  for i:=1 to n do
+    if start[s[i]]=0 then start[s[i]]:=i;//这里的方法不是特别优化，我记录了前缀和为s[i]的起始位置，与结束位置。
+                                         //通过相减也可以得出结果，这样的写法简洁明了，在后面求结果的时候占便宜，但是并不是最有利于程序运行的
+  for i:=n downto 1 do
+    if endl[s[i]]=0 then endl[s[i]]:=i;
+  start[0]:=0;
+  for i:=-n to n do
+    if a[endl[i]]-a[start[i]+1]>max2 then
+    max2:=a[endl[i]]-a[start[i]+1];//相间得出男女数量相同的这一段的距离，并当场打擂台，运用max2作为标准
+  if max1>max2 then writeln(max1) else writeln(max2);//最后在两种方案中（1.男与女连续相同取最大  2.男和女人数相等中取最大）二选一挑最大
+end.
