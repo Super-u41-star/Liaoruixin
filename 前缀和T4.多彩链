@@ -1,0 +1,35 @@
+方法1：（teacher）
+var
+s:ansistring;
+ans,x,i:longint;
+begin
+  readln(s);s:=s+' ';
+  ans:=1;
+  x:=1;
+  for i:=2 to length(s)+1 do
+  if s[i]<>s[i-1] then begin if i-x>ans then ans:=i-x;x:=i;end;
+writeln(ans);
+end.
+
+---------------------------------------这是一道华丽的分割线---------------------------------------
+方法2：（me,感觉太多了）
+var
+s1:ansistring;
+i,ans,max,s:longint;
+c1:char;
+c:array ['a'..'z'] of longint;
+begin
+  readln(s1);
+  for i:=1 to length(s1) do begin c[s1[i]]:=1;end;
+  for c1:='a' to 'z' do s:=s+c[c1];
+  if s=1 then begin writeln(length(s1));exit;end;
+  if length(s1)=1 then begin writeln(1);exit;end;
+  ans:=1;
+  for i:=1 to length(s1) do
+	if s1[i]<>s1[i-1] then
+		begin
+    if ans>max then max:=ans;ans:=1;
+		end
+	else inc(ans);
+  if ans>max then max:=ans;writeln(max);
+end.
