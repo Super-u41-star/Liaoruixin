@@ -1,0 +1,25 @@
+var
+i:longint;
+n,x,ans:qword;
+h,l,r:array [0..1000001] of qword;
+function min(x,y:qword):qword;
+begin
+  if x<y then exit(x) else exit(y);
+end;
+ 
+begin
+  readln(n);
+  for i:=1 to n do read(h[i]);
+  x:=h[1];
+  for i:=2 to n do if h[i]<x then l[i]:=x else x:=h[i];//l[i]代表从1~i最大的高度
+  x:=h[n];
+  for i:=n-1 downto 1 do
+  if h[i]<x then r[i]:=x else x:=h[i];//r[i]代表从n~i最大的高度
+  ans:=0;
+  for i:=1 to n do
+    begin
+      if min(l[i],r[i])>h[i] then
+      ans:=ans+min(l[i],r[i])-h[i];//剪掉多余的部分
+    end;
+  writeln(ans);
+end.
