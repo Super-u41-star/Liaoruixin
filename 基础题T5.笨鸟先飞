@@ -1,0 +1,16 @@
+var
+t,p,v,l,i,n:longint;
+begin
+  readln(t);
+  for p:=1 to t do
+    begin
+      readln(n);
+      v:=1;l:=0;
+      for i:=1 to n do
+        begin
+          l:=(l+v) mod 10000;
+          v:=(v+2) mod 10000;
+        end;
+      writeln(l);
+    end;
+end.
