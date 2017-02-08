@@ -1,0 +1,18 @@
+var
+i,x,p,q:longint;
+y:boolean;
+begin
+  y:=true;
+  for i:=1 to 10 do
+    begin
+      read(x);
+      if not y then continue;
+      if x mod 2=1 then inc(p);
+      if x mod 2=0 then inc(q);
+      if (p>0) and (q>0) and (p+q>2) then
+      begin
+      if p=1 then begin writeln(x);y:=false;end;
+      if q=1 then begin writeln(x);y:=false;end;
+      end;
+    end;
+end.
