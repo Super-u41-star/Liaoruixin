@@ -1,0 +1,44 @@
+var
+t,i,n,j,k,l,sum:longint;
+flag,x,y,ch1,ch2:char;
+st:string;
+c:array ['A'..'Z'] of longint;
+map,p:array ['A'..'Z','A'..'Z'] of longint;
+begin
+  readln(t);
+  for i:=1 to t do
+    begin
+      readln(n);
+      writeln('Case ',i,':');
+      fillchar(c,sizeof(c),0);
+      fillchar(map,sizeof(map),0);
+      fillchar(p,sizeof(p),0);
+      for j:=1 to n do
+        begin
+          readln(st);
+          flag:=st[2];
+          x:=st[1];
+          y:=st[3];
+          if flag='<' then begin map[x,y]:=1;map[y,x]:=2;end;
+          if flag='>' then begin map[x,y]:=2;map[y,x]:=1;end;//判断大小关系，建图
+          p[x,y]:=1;p[y,x]:=1;//记录这两个变量之间有关系，为了在后面的防止重复输出起到作用
+          inc(c[x]);
+          inc(c[y]);//算一下这个字母有没有出现
+        end;
+     for k:=1 to 26 do
+        for j:=1 to 26 do
+          for l:=1 to 26 do
+            if (map[chr(j+64),chr(k+64)]=2) and (map[chr(k+64),chr(l+64)]=2) then
+              begin
+                map[chr(j+64),chr(l+64)]:=2;map[chr(l+64),chr(j+64)]:=1;//弗洛伊德连通性，将经典代码“求连同”改为“求大小关系”
+              end;
+      sum:=0;
+        for ch1:='A' to 'Z' do
+          for ch2:='A' to 'Z' do//枚举两个变量
+            if (ch1<>ch2) and (c[ch1]>0) and (c[ch2]>0) and (map[ch1,ch2]=1)
+            and (p[ch1,ch2]=0)//如果两个字母不想等，都出现过，且ch1<ch2并且这条信息是新得出的
+            then  begin
+              writeln(ch1,'<',ch2);inc(sum);end;//则输出，计数
+      if  (sum=0) then writeln('NONE');//如果一条新的信息都没有推断出来，输出NONE
+    end;
+end.
