@@ -1,0 +1,17 @@
+var
+p,t,i:longint;
+a:string;
+ 
+begin
+  readln(t);
+  for p:=1 to t do
+    begin
+      readln(a);
+      while a[1]=' ' do delete(a,1,1);
+      while a[length(a)]=' ' do delete(a,length(a),1);
+      a:=' '+a;
+      for i:=1 to length(a) do
+        if (a[i]=' ') and (a[i+1]<>' ') then write(upcase(a[i+1]));
+      writeln;
+    end;
+end.
