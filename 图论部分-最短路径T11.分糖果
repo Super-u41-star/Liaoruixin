@@ -1,0 +1,48 @@
+var
+n,p,c,x,y,min,i,j,head,tail,tot,u,time:longint;
+a:array [0..500001,0..201] of longint;
+exist:array [0..500001] of boolean;
+dis:array [0..500001] of longint;
+b:array [0..500001] of longint;
+team:array [0..1000005] of longint;
+
+begin
+  readln(n,p,c);
+  readln(time);
+  for i:=1 to p do
+    begin
+      readln(x,y);
+      inc(a[x,0]);
+      a[x,a[x,0]]:=y;
+      inc(a[y,0]);
+      a[y,a[y,0]]:=x;
+    end;
+      i:=c;
+      for j:=1 to p do dis[j]:=maxlongint div 3;
+      fillchar(team,sizeof(team),0);
+      fillchar(exist,sizeof(exist),false);
+      dis[i]:=0;
+      team[1]:=i;
+      head:=0; tail:=1;
+      exist[i]:=true;
+      repeat
+        inc(head);
+        head:=((head-1) mod 200001)+1;
+        u:=team[head];
+        exist[u]:=false;
+        for j:=1 to a[u,0] do
+        if dis[a[u,j]]>dis[u]+1 then
+          begin
+            dis[a[u,j]]:=dis[u]+1;
+            if exist[ a[u,j] ]=false then
+              begin
+                inc(tail); tail:=((tail-1) mod 200001)+1;
+                team[tail]:=a[u,j];
+                exist[ a[u,j] ]:=true;
+              end;
+          end;
+      until head=tail;
+      tot:=0;
+      for j:=1 to n do if dis[j]>tot then tot:=dis[j];
+      writeln(tot+time+1);
+end.
