@@ -1,0 +1,38 @@
+var
+n,m,v,i,x,y,root1,root2,roots,max,j:longint;
+f1,w,c,ws,cs,f:array [0..10001] of longint;
+function search(p:longint):longint;
+begin
+  if f[p]=p then exit(f[p]);
+  f[p]:=search(f[p]);
+  exit(f[p]);//路径压缩
+end;
+
+procedure union(fa,fb:longint);
+begin
+  if fa>fb then f[fa]:=fb else f[fb]:=fa;//合并
+end;
+
+begin
+  readln(n,m,v);
+  for i:=1 to n do
+    readln(w[i],c[i]);
+  for i:=1 to n do f[i]:=i;
+  for i:=1 to m do
+    begin
+      readln(x,y);
+      root1:=search(x);
+      root2:=search(y);//查找根节点
+      if root1<>root2 then union(root1,root2);//如果不是同一个集合，合并
+    end;
+  for i:=1 to n do
+    begin
+    roots:=search(i);
+    inc(ws[roots],w[i]);
+    inc(cs[roots],c[i]);//将有联系的物品归于一组，加到树根上即可
+    end;
+  for i:=1 to n do
+    for j:=v downto ws[i] do
+      if f1[j-ws[i]]+cs[i]>f1[j] then f1[j]:=f1[j-ws[i]]+cs[i];//最后01背包
+  writeln(f1[v]);//输出
+end.
