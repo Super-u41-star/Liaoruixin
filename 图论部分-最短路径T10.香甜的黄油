@@ -1,0 +1,53 @@
+var
+n,p,c,x,y,min,i,j,head,tail,tot,u:longint;
+a,w:array [0..801,0..801] of longint;
+exist:array [0..801] of boolean;
+dis:array [0..801] of longint;
+b:array [0..501] of longint;
+team:array [0..1605] of longint;
+
+begin 
+  readln(n,p,c);
+  for i:=1 to n do read(b[i]);
+  for i:=1 to c do
+    begin
+      readln(x,y,w[x,y]);
+      inc(a[x,0]);
+      a[x,a[x,0]]:=y;
+      inc(a[y,0]);
+      a[y,a[y,0]]:=x;
+      w[y,x]:=w[x,y];
+    end;
+  min:=maxlongint;
+  for i:=1 to p do
+    begin
+      for j:=1 to p do dis[j]:=maxlongint div 3;//初始化
+      fillchar(team,sizeof(team),0);//team是我们索要维护的队列
+      fillchar(exist,sizeof(exist),false);//exist数组是判断此点有没有出现过的标记数组
+      dis[i]:=0;//自己点为0
+      team[1]:=i;//记录，第一个点，也就是起点为i
+      head:=0; tail:=1;//初始化
+      exist[i]:=true;//置为真，代表这个点一出现，防止后面出现环
+      repeat
+        inc(head);
+        head:=((head-1) mod 1601)+1;//mod的方式使数组不会越界
+        u:=team[head];//找到队头所代表的那个点进行延伸
+        exist[u]:=false;//这个点还为出现
+        for j:=1 to a[u,0] do
+        if dis[a[u,j]]>dis[u]+w[u,a[u,j]] then
+          begin
+            dis[a[u,j]]:=dis[u]+w[u,a[u,j]];//松弛操作
+            if exist[ a[u,j] ]=false then//如果延伸出来的点没有用过，则标记为用过（防环必备）
+              begin
+                inc(tail); tail:=((tail-1) mod 1601)+1;
+                team[tail]:=a[u,j];//用队尾记录下这个新来的点
+                exist[ a[u,j] ]:=true;
+              end;
+          end;
+      until head=tail;//已经延伸不出任何点了
+      tot:=0;
+      for j:=1 to n do tot:=tot+dis[b[j]];//以i为起点，以b[j]为终点的长度和tot
+      if tot<min then min:=tot;//打擂台，找最小
+    end;
+  writeln(min);//输出
+end.
