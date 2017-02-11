@@ -1,0 +1,49 @@
+var
+n,i,k:longint;
+s:array [0..20] of longint;
+a,ans:array [0..200001] of longint;
+
+procedure qsort(low,high:longint);
+var i,j,mid,temp:longint;
+begin
+  i:=low;j:=high;mid:=a[(i+j) div 2];
+  repeat
+    while a[i]<mid do inc(i);
+    while a[j]>mid do dec(j);
+    if i<=j then
+      begin
+        temp:=a[i];a[i]:=a[j];a[j]:=temp;
+        inc(i);dec(j);
+      end;
+  until i>j;
+  if i<high then qsort(i,high);
+  if j>low then qsort(low,j);
+end;
+
+procedure dfs(i,p,k:longint);
+begin
+  if k=1 then exit;
+  ans[2*i]:=a[p+s[k]];//左子树是要求偏大的（因为输出字典序大），所以在后面s[k]个
+  dfs(i*2,p+s[k],k-1);
+  ans[2*i+1]:=a[p+1];//右子树要求偏小的，p后面的就是
+  dfs(i*2+1,p+1,k-1);//双双递归
+end;
+
+begin
+  readln(n);
+  for i:=1 to n do
+    read(a[i]);
+  qsort(1,n);//读入之后先排序，这样能够保证有序的情况下建立左子树，右子树
+  k:=1;
+  s[1]:=1;
+  while s[k]<n do
+    begin
+      inc(k);
+      s[k]:=s[k-1]*2;
+    end;//s[i]记录2的i-1次方，在递归中列举当前着一层的数量
+  ans[1]:=a[1];
+  if n>1 then dfs(1,1,k-1);//递归
+  for i:=1 to n-1 do
+    write(ans[i],' ');
+  writeln(ans[n]);
+end.
