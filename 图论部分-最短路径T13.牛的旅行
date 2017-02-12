@@ -1,1 +1,48 @@
+const inf=1000000;
+var
+n,i,j,k:longint;
+ch:char;
+min:double;
+f:array [0..160,0..160] of double;
+dis:array [0..160] of double;
+x,y:array [0..160] of longint;
 
+function count(p,q:longint):double;
+begin
+  count:=sqrt( sqr(x[p]-x[q]) + sqr(y[p]-y[q]) );//计算点i到点j之间的直线距离
+end;
+
+begin
+  readln(n);
+  for i:=1 to n do
+    readln(x[i],y[i]);//读入
+  for i:=1 to n do
+    begin
+      for j:=1 to n do
+        begin
+          read(ch);
+          if ch='1' then
+          f[i,j]:=count(i,j) //如果点i到点j之间有一条连边，那么就先计算它们俩之间的距离
+          else f[i,j]:=inf;//否则置成一个较大值
+        end;
+      readln;
+    end;
+  for k:=1 to n do
+    for i:=1 to n do
+      for j:=1 to n do
+        if (i<>j) and (j<>k) and (i<>k) and (f[i,j]>f[i,k]+f[k,j])
+          then f[i,j]:=f[i,k]+f[k,j];//先求最短路径
+  for i:=1 to n do
+    for j:=1 to n do
+      if (f[i,j]<inf) and (dis[i]<f[i,j])
+      then dis[i]:=f[i,j];//dis[i]计算以i为起点以j为终点的最短路径中最长的长度是多少
+  min:=inf;//min置为一个较大值，找最小
+  for i:=1 to n do
+    for j:=1 to n do
+      if (i<>j) and (f[i,j]>=inf) and (dis[i]+count(i,j)+dis[j]<min) then
+      min:=dis[i]+count(i,j)+dis[j];
+      //首先，起点终点不一样，然后，两点之间没有连边，第三如果新加上了一条边（count ( i , j )）的值较小的话，那么记下来
+      //因为如果只添加一条起点为i，终点为j的边，改动的值只跟dis[i]和dis[j]有关，这一句是本程序中最难想到的，也是整个算法的灵魂
+  for i:=1 to n do if dis[i]>min then min:=dis[i];//如果在添加一条边后，仍没有原来所构造的最长直径要长，则记录下最小值
+  writeln(min:0:6);//保留6位小数后输出
+end.
