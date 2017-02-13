@@ -1,0 +1,34 @@
+var
+n,m,p,i,x,y,tail,ans:longint;
+q:array [0..10001] of longint;
+f:array [0..201,0..201] of longint;
+procedure dfs(x:longint);
+var i:longint;
+begin
+  for i:=1 to n do
+    if f[x,i]>0 then
+    begin
+      inc(ans);
+      dec(f[x,i]);
+      dec(f[i,x]);
+      dfs(i);
+    end;
+  inc(tail);
+  q[tail]:=x;
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do
+    readln(p);
+  for i:=1 to m do
+    begin
+      readln(x,y);
+      inc(f[x,y]);
+      inc(f[y,x]);
+    end;
+  dfs(1);
+  writeln(ans);
+  for i:=tail downto 1 do write(q[i],' ');
+  writeln;
+end.
