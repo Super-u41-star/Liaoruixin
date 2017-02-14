@@ -1,0 +1,17 @@
+var
+tot:real;
+x1,y1,x2,y2,hour,minute,i:longint;
+begin
+  readln(x1,y1);
+  while not eof do
+    begin
+      readln(x1,y1,x2,y2);
+      tot:=tot+sqrt(sqr(x1-x2)+sqr(y1-y2));
+    end;
+  tot:=tot*2/20/1000;
+  hour:=trunc(tot);
+  minute:=round(60*(tot-hour));
+  if minute=60 then begin inc(hour);minute:=0;end;
+  write(hour,':');
+  writeln(minute);
+end.
