@@ -1,0 +1,26 @@
+var
+st:ansistring; 
+i:longint; 
+s:array [0..1026] of longint; 
+procedure work(p,q:longint); 
+begin
+  if s[q]-s[p-1]=0 then begin write('A');exit;end; 
+//p和q之间如果全是字符0，则输出A，直接退掉
+  if s[q]-s[p-1]=q-p+1 then begin write('B');exit;end; 
+//p和q之间如果全是字符1，则输出B，直接退掉
+//在上面两个条件都不满足的情况下做下面的
+  write('C'); 
+  work(p,(p+q) div 2); 
+//递归前半部分
+  work((p+q) div 2+1,q); 
+//递归后半部分
+end; 
+  
+begin
+  readln(st); 
+  for i:=1 to length(st) do
+if st[i]='0' then s[i]:=s[i-1] else s[i]:=s[i-1]+1; 
+//前缀和部分
+  work(1,length(st)); 
+//从首到尾搜一遍
+end.
