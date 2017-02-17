@@ -1,0 +1,32 @@
+var
+n,i,l,r,k,j,ans,min:longint;
+f:array [0..101,0..101] of longint;
+a:array [0..101] of longint;
+
+begin
+  readln(n);
+  for i:=1 to n do
+    for j:=1 to n do f[i,j]:=1000000;
+  for i:=1 to n do
+    begin
+      f[i,i]:=0;
+      readln(a[i],l,r);
+      if l<>0 then begin f[i,l]:=1;f[l,i]:=1;end;
+      if r<>0 then begin f[i,r]:=1;f[r,i]:=1;end;//将两点连在一起，这两点间的长度为1,
+    end;
+  for k:=1 to n do
+    for i:=1 to n do
+      for j:=1 to n do
+        if (i<>j) and (j<>k) and (i<>k) then
+        if f[i,j]>f[i,k]+f[k,j] then f[i,j]:=f[i,k]+f[k,j];//弗洛伊德求法，求出两点之间的最小距离
+  min:=maxlongint;
+  for i:=1 to n do
+    begin
+      ans:=0;
+      for j:=1 to n do
+        ans:=ans+f[i,j]*a[j];//求出每个点的到医院所在地i的总花费，累加
+      if ans<min then min:=ans;//找最小的
+    end;
+  writeln(min);//输出
+end.
+
