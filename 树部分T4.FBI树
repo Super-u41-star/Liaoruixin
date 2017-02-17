@@ -1,0 +1,19 @@
+var
+st:ansistring; 
+i,a:longint; 
+s:array [0..2000] of longint; 
+procedure work(p,q:longint); 
+begin
+  if p<q then begin work(p,(p+q) div 2);work((p+q) div 2+1,q);end; 
+  if s[q]-s[p-1]=0 then begin write('B');exit;end; 
+  if s[q]-s[p-1]=q-p+1 then begin write('I');exit;end; 
+  write('F'); 
+end; 
+  
+begin
+  readln(a); 
+  readln(st); 
+  for i:=1 to length(st) do
+    if st[i]='0' then s[i]:=s[i-1] else s[i]:=s[i-1]+1; 
+  work(1,length(st)); 
+end.
