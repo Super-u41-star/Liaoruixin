@@ -1,0 +1,25 @@
+var
+n,k,i,p,root:longint;
+a,l,r:array [0..301] of longint;
+b:array [0..301] of boolean;
+procedure find(now:longint);
+begin
+  if now=0 then exit;
+  find(l[now]);//遍历左子树
+  inc(p);
+  if a[now]=k then begin writeln(p);exit;end;//判断是否是我们要查找的值，别忘了1.在外面套上一层a；2.光用now是不行的，还要用一个p来统计出现的编号才行
+  find(r[now]);//遍历右子树
+end;
+
+begin
+  readln(n);
+  readln(k);
+  fillchar(b,sizeof(b),true);
+  for i:=1 to n do
+    begin
+      readln(a[i],l[i],r[i]);
+      b[l[i]]:=false;b[r[i]]:=false;//打标记
+    end;
+  for i:=1 to n do if b[i]=true then begin root:=i;break;end;//找第一个为true的点
+  find(root);//从它开始遍历
+end.
