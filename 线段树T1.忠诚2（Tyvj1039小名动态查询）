@@ -1,0 +1,69 @@
+var
+s,e,i,n,m,flag,p,temp:longint;
+ch:char;
+score,q:array [0..200001] of longint;
+node:array [0..600001] of record
+l:longint;r:longint;min:longint;
+end;
+ 
+function min(x,y:longint):longint;
+begin
+  if x<y then exit(x) else exit(y);
+end;
+ 
+procedure BuildTree(left,right:longint;num:longint);
+begin
+  node[num].l:=left;
+  node[num].r:=right;//先记下左右两端点各为几
+  if left=right then
+    node[num].min:=score[left]//如果搜到了叶子，则直接记下当前点的值，因为只有一个点，最小值肯定就是他自身
+  else
+    begin
+      BuildTree(left,(left+right) div 2,2*num);//递归左子树
+      BuildTree((left+right) div 2+1,right,2*num+1);//递归右子树
+      node[num].min:=min(node[2*num].min,node[2*num+1].min);//取最小值
+    end;
+end;
+ 
+procedure Update(stu:longint;now:longint;num:longint);
+begin
+  if (node[num].l=node[num].r) then begin node[num].min:=now;end
+  else
+  begin
+  if stu<=node[2*num].r then Update(stu,now,2*num)
+  else
+    Update(stu,now,2*num+1);
+  node[num].min:=min(node[num*2].min,node[num*2+1].min);
+  end;
+end;//刚才说过修正的方法了
+ 
+function Query(left,right:longint;num:longint):longint;
+var mid:longint;
+begin
+  if (node[num].l=left) and (node[num].r=right) then exit(node[num].min);//如果搜到了叶子，直接返回
+  if right<=node[2*num].r then exit(Query(left,right,2*num));//搜左半边
+  if left>=node[2*num+1].l then exit(Query(left,right,2*num+1));//搜右半边
+  mid:=(node[num].l+node[num].r) div 2;
+  exit(min(Query(left,mid,2*num),Query(mid+1,right,2*num+1)));//取最值
+ 
+end;
+ 
+begin
+    read(n,m);
+    readln;
+    fillchar(score,sizeof(score),0);
+    for i:=1 to n do read(score[i]);//先读入
+    fillchar(node,sizeof(node),$7f);
+    BuildTree(1,n,1);//从1到n开始建树
+    for i:=1 to m do
+    begin
+      readln(flag,s,e);
+      if (flag=1) and (s>e) then begin temp:=s;s:=e;e:=temp;end;
+//这句话是句废话，但防止恶心数据有很大作用
+      case flag of
+        2:Update(s,e,1);//更新节点值
+        1:begin inc(p);q[p]:=Query(s,e,1);end;//查找并记录
+      end;
+    end;
+    for i:=1 to p do write(q[i],' ');//输出
+end.
