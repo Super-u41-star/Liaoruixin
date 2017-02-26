@@ -1,0 +1,27 @@
+今天又将线段树的裸题做了一遍，发现这当中还存在着很多问题，今天把代码拿出来重新说一遍
+记得原来的单点更新是这样的
+procedure Update(stu:longint;now:longint;num:longint);
+begin
+  node[num].min:=min(now,node[num].min);
+  if (node[num].l=node[num].r) then exit;
+  if stu<=node[2*num].r then Update(stu,now,2*num)
+  else
+    Update(stu,now,2*num+1);
+end;
+
+但是我发现这里存在一个严重的问题，如果将这个点更改成更大值的话，那么就没有起到更新的作用，而会保持原来的值，我凭着自己的理解对它进行了修改，现在终于对了，来简略写一下各句的意思。
+
+procedure Update(stu:longint;now:longint;num:longint);
+begin
+  if (node[num].l=node[num].r) then begin node[num].min:=now;end
+//如果递归到叶子节点，则直接修改节点上的原值
+  else
+  begin
+  if stu<=node[2*num].r then Update(stu,now,2*num)//将此段分解，如果是在这左半段则，递归到左半段
+  else
+    Update(stu,now,2*num+1);//否则递归到右半段
+  node[num].min:=min(node[num*2].min,node[num*2+1].min);//在左右两段中取最小值即可求出当前的值
+  end;
+end;
+
+
