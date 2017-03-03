@@ -1,0 +1,42 @@
+var
+s1:string;
+i:longint;
+l,r:array [0..301] of longint;
+a:array [0..301] of string;
+procedure BuildTree(now:longint);
+begin
+  inc(i);
+  if s1[i]<>'.' then//如果遇到空，则跳过
+  begin
+    l[now]:=2*now;//记录左儿子的ID
+    r[now]:=2*now+1;//记录右儿子的ID
+    a[now]:=s1[i];//记录下当前这个点的内容
+    BuildTree(2*now);//递归左半边建树
+    BuildTree(2*now+1);//递归右半边建树
+  end;
+end;
+
+procedure Middle(now:longint);
+begin
+  if now=0 then exit;
+  Middle(l[now]);
+  write(a[now]);
+  Middle(r[now]);//中序遍历
+end;
+
+procedure Last(now:longint);
+begin
+  if now=0 then exit;
+  Last(l[now]);
+  Last(r[now]);
+  write(a[now]);//后序遍历
+end;
+
+
+begin
+  readln(s1);
+  BuildTree(1);
+  Middle(1);
+  writeln;
+  Last(1);
+end.
