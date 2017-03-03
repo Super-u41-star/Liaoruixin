@@ -1,0 +1,19 @@
+var
+sw,s1:string;
+i:longint;
+y:boolean;
+
+begin
+  readln(sw);
+  for i:=1 to length(sw) do if sw[i]<>'#' then sw[i]:='A';
+  for i:=1 to length(sw)+1 do s1:=s1+'#';
+  sw:=sw+s1;
+  y:=true;
+  for i:=1 to length(sw) do
+    if (sw[2*i]<>sw[2*i+1]) then
+    begin
+      writeln('No');
+      y:=false;break;
+    end;
+  if y then writeln('Yes');
+end.
