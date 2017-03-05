@@ -1,0 +1,24 @@
+uses math;
+var
+  i,n,k,l,x,y:longint;
+    f:array[0..501,0..501]of longint;
+    s:array[0..501]of longint;
+begin
+  fillchar(f,sizeof(f),$3f);
+  readln(n);
+    s[0]:=0;
+    for i:=1 to n do
+    begin
+      read(x,y);
+          x:=x-y;
+        f[1,i]:=0;//初始化
+        s[i]:=s[i-1]+x;//前缀和
+    end;
+    for l:=2 to n do//合并区间DP算法
+      for x:=1 to n-l+1 do
+            begin
+                for k:=1 to l-1 do f[l,x]:=min(f[l,x],f[k,x]+f[l-k,x+k]);
+                f[l,x]:=f[l,x]+s[x+l-1]-s[x-1];
+            end;
+    write(f[n,1]);
+end.
