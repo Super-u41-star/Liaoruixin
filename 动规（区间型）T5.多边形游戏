@@ -1,0 +1,56 @@
+uses math;
+var
+n,i,rs,maxn,minn,j,k,mid1,mid2,tot:longint;
+ch:array [0..51] of char;
+space:char;
+a:array [0..51] of longint;
+fmax,fmin:array [0..51,0..51] of longint;
+function update(flag:char;x,y:longint):longint;//辅助工具函数，手写
+begin
+  if flag='+' then exit(x+y);
+  if flag='*' then exit(x*y);
+end;
+ 
+ 
+begin
+  readln(n);
+  for i:=0 to n-1 do//利用n取余的值在0至n-1内解决问题
+    begin
+    read(ch[i],space);
+    read(a[i]);
+    read(space);
+    end;
+  for i:=0 to n-1 do
+    begin
+      fmax[i,i]:=a[i];
+      fmin[i,i]:=a[i];
+    end;//初始化数组，写边界
+  for rs:=1 to n-1 do
+    begin
+      for i:=0 to n-1 do
+        begin
+          maxn:=-maxlongint;
+          minn:=maxlongint;//初始化变量
+          j:=(i+rs) mod n;//j为终点
+          for k:=0 to rs-1 do
+            begin
+              mid1:=(i+k) mod n;
+              mid2:=(i+k+1) mod n;
+              //mid1第一段结束点 mid2第二段起始点
+              maxn:=max(maxn,update(ch[mid2],fmax[i,mid1],fmax[mid2,j]));
+              maxn:=max(maxn,update(ch[mid2],fmin[i,mid1],fmin[mid2,j]));
+              minn:=min(minn,update(ch[mid2],fmax[i,mid1],fmax[mid2,j]));
+              minn:=min(minn,update(ch[mid2],fmin[i,mid1],fmin[mid2,j]));//通过辅助判断“+”和“*”的函数合并
+            end;
+          fmax[i,j]:=maxn;
+          fmin[i,j]:=minn;//记录下结果
+        end;
+    end;
+  tot:=-maxlongint;
+  for i:=0 to n-1 do
+    begin
+      j:=(i+n-1) mod n;//设置起点，步长，终点
+      if fmax[i,j]>tot then tot:=fmax[i,j];//打擂台选取最大
+    end;
+  writeln(tot);//输出
+end.
