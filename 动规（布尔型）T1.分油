@@ -1,0 +1,29 @@
+uses math;
+var
+x,y,k,m,i,j,n,ans:longint;
+dp:array [0..201,0..201,0..201] of byte;
+begin
+  readln(x,y,k,m);
+  dp[0,0,0]:=1;//初始化
+  ans:=maxlongint div 3;//初始化，求最小找最大
+ for n:=0 to k do//n从0开始，从n往n+1推
+      for i:=0 to x do
+        for j:=0 to y do
+            if dp[n,i,j]=1 then//如果可以出现这种情况
+            begin
+            ans:=min(ans,abs(m-i-j));//则考虑是否可计入
+                dp[n+1,0,j]:=1;//将第1个桶倒光
+                dp[n+1,i,0]:=1;//
+                dp[n+1,x,j]:=1;//将第1个桶给倒满
+                dp[n+1,i,y]:=1;//将第2个桶给倒满
+                if i+j<=y then
+                  dp[n+1,0,i+j]:=1//如果能将所有的都倒进第2个桶里，则都倒进去
+                  else
+                  dp[n+1,i-(y-j),y]:=1;//否则只要求把第2个桶给倒满就行了
+                if i+j<=x then//关于第1个桶和第2个桶同理
+                    dp[n+1,i+j,0]:=1
+                    else
+                    dp[n+1,x,j-(x-i)]:=1;
+          end;
+  writeln(ans);//输出结果
+end.
