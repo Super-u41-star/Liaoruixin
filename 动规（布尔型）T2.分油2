@@ -44,3 +44,107 @@ begin
    end;
   writeln(ans);
 end.
+
+--------------------------Jrx的解题报告----------------------------
+【题目原文】 
+Farmer John has received an order for exactly M units of milk (1≤M≤200) that he needs to fill right away. Unfortunately, his fancy milking machine has just become broken, and all he has are two milk pails of integer sizes X and Y (1≤X,Y≤100) with which he can measure milk. Both pails are initially empty. Using these two pails, he can perform up to K of the following types of operations (1≤K≤100): 
+- He can fill either pail completely to the top. 
+- He can empty either pail. 
+- He can pour the contents of one pail into the other, stopping when the former becomes empty or the latter becomes full (whichever of these happens first). 
+Although FJ realizes he may not be able to end up with exactly M total units of milk in the two pails, please help him compute the minimum amount of error between M and the total amount of milk in the two pails. That is, please compute the minimum value of |M−M′| such that FJ can construct M′ units of milk collectively between the two pails. 
+【题目描述】 
+有两个桶大小为X和Y，开始都是空的。 
+有如下三种操作，最多操作K次。 
+①倒满一个桶。 
+②倒空一个桶。 
+③把一个桶里的油倒到另一个桶里，直到一个桶空了或者另一个桶满了。（看哪种情况先发生） 
+给出要求的油量M. 
+最后你获得的油量是两个桶的水量之和M’。 
+求|M-M’|的最小值。 
+【输入格式】 
+一行，四个数X,Y,K,M 
+【输出格式】 
+最小值。 
+【样例输入】 
+14 50 2 32 
+【样例输出】 
+18 
+【数据范围】 
+1<=x,y,k<=1000 
+1<=m<=2000 
+【分析】 
+此题有多种方法。 
+方法1：Bool型DP，设f[i][j][k]表示第i步时一个桶为i，一个桶为j能否行得通（0\1），最后打擂台即可。程序较简单，容易实现，但是时间和空间都不资瓷，只能做到百级别的数据。
+
+#include<bits/stdc++.h>
+using namespace std;
+int f[105][105][105];
+int abs(int x){ return (x<0?-x:x); }
+int main(){
+    int x,y,k,m;
+    cin>>x>>y>>k>>m;
+    memset(f,0,sizeof(f));
+    f[1][x][0]=f[1][0][y]=1;
+    int ans=(1<<31)-1;
+    for (int n=1;n<=k;n++)
+        for (int i=0;i<=x;i++)
+            for (int j=0;j<=y;j++){
+                if (f[n][i][j]) {ans=min(ans,abs(m-i-j));
+                f[n+1][0][j]=f[n+1][i][0]=f[n+1][x][j]=f[n+1][i][y]=1;
+                if (i+j<=y) f[n+1][0][i+j]=1; else f[n+1][i-(y-j)][y]=1;
+                if (i+j<=x) f[n+1][i+j][0]=1; else f[n+1][x][j-(x-i)]=1;}
+            }
+    cout<<ans;
+}
+方法2：搜索（深搜广搜都可以），设f[i][j]表示一个桶为i，一个桶为j的最少步数，这下可以做到千级别的数据了。
+
+#include<bits/stdc++.h>
+using namespace std;
+int x,y,k,m,ans;
+int a[2005][2005]; 
+queue<int> a1,a2;
+int main(){
+    cin>>x>>y>>k>>m;k++;
+    a1.push(0);a2.push(0);
+    a[0][0]=1;
+    ans=m;
+    while(!a1.empty()){
+        int t1=a1.front(),t2=a2.front();
+        a1.pop();a2.pop();
+        if (abs(t1+t2-m)<ans) ans=abs(t1+t2-m);
+        if (a[t1][t2]==k) continue;
+        if (!a[x][t2]){
+            a[x][t2]=a[t1][t2]+1;
+            a1.push(x);a2.push(t2);
+        }
+        if (!a[t1][y]){
+            a[t1][y]=a[t1][t2]+1;
+            a1.push(t1);a2.push(y);
+        }
+        if (!a[0][t2]){
+            a[0][t2]=a[t1][t2]+1;
+            a1.push(0);a2.push(t2);
+        }
+        if (!a[t1][0]){
+            a[t1][0]=a[t1][t2]+1;
+            a1.push(t1);a2.push(0);
+        }
+        if (t1+t2<=y&&!a[0][t1+t2]){
+            a[0][t1+t2]=a[t1][t2]+1;
+            a1.push(0);a2.push(t1+t2);
+        }
+        if (t1+t2<=x&&!a[t1+t2][0]){
+            a[t1+t2][0]=a[t1][t2]+1;a1.push(t1+t2);a2.push(0);
+        }
+        if (t1>y-t2&&!a[t1+t2-y][y]){
+            a[t1+t2-y][y]=a[t1][t2]+1;
+            a1.push(t1+t2-y);a2.push(y);
+        }
+        if (t2>x-t1&&!a[x][t1+t2-x]){
+            a[x][t1+t2-x]=a[t1][t2]+1;
+            a1.push(x);a2.push(t1+t2-x);
+        }
+        if (ans==0){cout<<0;return 0;}
+    }
+    cout<<ans;
+}
