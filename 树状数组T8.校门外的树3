@@ -1,0 +1,42 @@
+uses math;
+type
+data=array [0..50001] of longint;
+ 
+var
+n,m,x,y,i,f:longint;
+a,b:data;
+ 
+function lb(x:longint):longint;
+begin
+  lb:=(-x) and x;
+end;
+ 
+procedure ch(var e:data;x:longint);
+begin
+  while x<=n do
+    begin
+      e[x]:=e[x]+1; x:=x+lb(x);
+    end;
+end;
+ 
+function sum(var e:data;x:longint):longint;
+var s:longint;
+begin
+  sum:=0;
+  while x>0 do
+    begin
+      sum:=sum+e[x]; x:=x-lb(x);
+    end;
+end;
+ 
+begin
+  read(n,m);
+  for i:=1 to m do
+    begin
+      read(f,x,y);
+      case f of
+      1:begin ch(a,x);ch(b,y);end;
+      2:writeln(sum(a,y)-sum(b,x-1));
+      end;
+    end;
+end.
