@@ -1,0 +1,44 @@
+var
+n,m,i,left,right:longint;
+a:array [0..300001] of longint;
+t:array [0..600003] of record
+a,b,max:longint;
+end;
+ 
+function max(x,y:longint):longint;
+begin
+  if x<y then exit(x) else exit(y);
+end;
+ 
+procedure make(x,y,num:longint);
+begin
+  t[num].a:=x;t[num].b:=y;
+  if x=y then t[num].max:=a[x]
+  else
+    begin
+      make(x,(x+y) div 2,2*num);
+      make((x+y) div 2+1,y,2*num+1);
+      t[num].max:=max(t[2*num].max,t[2*num+1].max);
+    end;
+end;
+ 
+function query(i,j,num:longint):longint;
+var mid:longint;
+begin
+  if (i=t[num].a) and (j=t[num].b) then exit(t[num].max);
+  if j<=t[2*num].b then exit(query(i,j,2*num));
+  if i>=t[2*num+1].a then exit(query(i,j,2*num+1));
+  mid:=(t[num].a+t[num].b) div 2;
+  exit(max(query(i,mid,2*num),query(mid+1,j,2*num+1)));
+end;
+ 
+begin
+  readln(n,m);
+  for i:=1 to n do read(a[i]);
+  make(1,n,1);
+  for i:=1 to m do
+    begin
+      readln(left,right);
+      write(query(left,right,1),' ');
+    end;
+end.
