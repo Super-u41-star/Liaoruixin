@@ -1,0 +1,37 @@
+uses math;
+var
+k,i,y,z,ans:longint;
+f:array [0..12000,0..2] of longint;
+v1:array [0..10001] of boolean;
+son,x,father:array [0..12000] of longint;
+b:array [0..6001,0..1001] of longint;
+procedure treedp(k1:longint);
+var j,s:longint;
+begin
+  if son[k1]=0 then
+    begin f[k1,1]:=x[k1];f[k1,2]:=0;v1[k1]:=true;exit;end;
+  if v1[k1] then exit;
+  for j:=1 to son[k1] do treedp(b[k1,j]);
+  for j:=1 to son[k1] do
+    begin
+      s:=b[k1,j];
+      f[k1,1]:=f[k1,1]+f[s,2];
+      f[k1,2]:=f[k1,2]+max(f[s,1],f[s,2]);
+    end;
+  v1[k1]:=true; f[k1,1]:=f[k1,1]+x[k1];
+end;
+begin
+  read(k);
+  for i:=1 to k do read(x[i]);
+  repeat
+    read(y,z);
+    if (z=0) and (y=0) then break;
+    inc(son[z]);
+    b[z,son[z]]:=y;
+    father[y]:=z;
+  until false;
+  fillchar(v1,sizeof(v1),false);
+  for i:=1 to k do
+  if father[i]=0 then begin treedp(i); if f[i,1]>f[i,2] then ans:=ans+f[i,1] else ans:=ans+f[i,2];end;
+  writeln(ans);
+end.
