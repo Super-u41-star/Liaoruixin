@@ -1,0 +1,32 @@
+var
+x,y,n,i,xs,xc,tail,v,c:longint;
+b,a:array [0..10001] of longint;
+flag,space:char;
+begin
+  readln(x,y);
+  readln(n);
+  xs:=x;xc:=y*x;
+  a[1]:=x;b[1]:=y*x;
+  tail:=1;
+  for i:=1 to n do
+    begin
+      read(flag);
+      if flag='P' then
+      begin
+        read(space,v,c);
+        xs:=xs+v;
+        xc:=xc+c*v;
+        writeln(xs,' ',xc/xs:0:5);
+        inc(tail);
+        a[tail]:=xs;b[tail]:=xc;
+      end
+      else
+        begin
+          dec(tail);
+          if tail=0 then tail:=1;
+          writeln(a[tail],' ',b[tail]/a[tail]:0:5);
+          xs:=a[tail];xc:=b[tail];
+        end;
+        readln;
+    end;
+end.
