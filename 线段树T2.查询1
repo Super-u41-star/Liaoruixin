@@ -4,7 +4,7 @@ a:array [0..300001] of longint;
 t:array [0..600003] of record
 a,b,max:longint;
 end;
- 
+
 function max(x,y:longint):longint;
 begin
   if x<y then exit(x) else exit(y);
