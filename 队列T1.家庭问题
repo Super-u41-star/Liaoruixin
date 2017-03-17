@@ -1,0 +1,85 @@
+var
+n,m,x,y,ans,max,i:longint;
+map:array [0..101,0..101] of boolean;
+f:array [0..101] of longint;
+que:array [0..201] of longint;
+procedure bfs(beg:longint);
+var sum,head,tail,i:longint;
+begin
+  sum:=1;
+  head:=0;
+  tail:=1;
+  fillchar(que,sizeof(que),0);
+  que[1]:=beg;
+  repeat
+    inc(head);
+    for i:=1 to n do
+      if (map[que[head],i]) and (f[i]=0) then
+        begin
+          inc(tail);
+          que[tail]:=i;
+          f[i]:=ans;
+          inc(sum);
+        end;
+  until head=tail;
+  if sum>max then max:=sum;
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to m do
+    begin
+      readln(x,y);
+      map[x,y]:=true;
+      map[y,x]:=true;
+    end;
+  for i:=1 to n do
+    if f[i]=0 then
+      begin
+        inc(ans);
+        f[i]:=ans;
+        bfs(i);
+      end;
+  writeln(ans,' ',max);
+end.
+{并查集写法}
+{
+var
+root,max,n,m,i,x,y,root1,root2,ans:longint;
+f,sum:array [0..100001] of longint;
+
+function search(p:longint):longint;
+begin
+  if f[p]=p then exit(p);
+  f[p]:=search(f[p]);
+  exit(f[p]);
+end;
+
+procedure union(root1,root2:longint);
+begin
+  f[root2]:=root1;
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do f[i]:=i;
+  for i:=1 to m do
+    begin
+      readln(x,y);
+      root1:=search(x);
+      root2:=search(y);
+      if root1<>root2 then union(root1,root2);
+    end;
+  for i:=1 to n do
+    begin
+      root:=search(i);
+      inc(sum[root]);
+    end;
+  for i:=1 to n do
+    begin
+    if sum[i]>0 then inc(ans);
+    if sum[i]>max then max:=sum[i];
+    end;
+  writeln(ans,' ',max);
+end.
+}
