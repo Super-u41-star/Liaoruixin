@@ -1,0 +1,64 @@
+var
+len,sn,nn,now,i,i1:longint;
+s:string;
+sign:array [0..10001] of char;
+num:array [0..10001] of longint;
+
+procedure calc;
+begin
+  if sign[sn]='+' then num[nn-1]:=num[nn]+num[nn-1];
+  if sign[sn]='-' then num[nn-1]:=num[nn-1]-num[nn];
+  if sign[sn]='*' then num[nn-1]:=num[nn]*num[nn-1];
+  if sign[sn]='/' then num[nn-1]:=num[nn-1] div num[nn];
+  dec(nn);
+  dec(sn);
+end;
+
+function pri(ch:char):longint;
+begin
+  if (ch='+') or (ch='-') then exit(1);
+  if (ch='*') or (ch='/') then exit(2);
+  if ch='(' then exit(-100);
+end;
+
+begin
+  readln(s);
+  len:=length(s)-1;
+  for i:=1 to len-1 do
+  if ((s[i]='+') or (s[i]='-') or (s[i]='*') or (s[i]='/'))
+  and ((s[i+1]='+') or (s[i+1]='-') or (s[i+1]='*') or (s[i+1]='/'))
+  then begin writeln('NO');exit;end;
+  for i:=1 to len do
+    begin
+      if (s[i]>='0') and (s[i]<='9') then
+        now:=(ord(s[i])-48)+now*10
+      else
+        begin
+          if s[i]='(' then
+          begin
+            inc(sn);
+            sign[sn]:=s[i];
+            continue;
+          end;
+          if s[i-1]<>')' then
+          begin
+            inc(nn);
+            num[nn]:=now;
+            now:=0;
+          end;
+          if s[i]=')' then
+          begin
+            while sign[sn]<>'(' do calc;
+            dec(sn);
+            continue;
+          end;
+          if (sn>=1) and (pri(s[i])<=pri(sign[sn])) then
+          calc;
+          inc(sn);
+          sign[sn]:=s[i];
+        end;
+    end;
+  if s[len]<>')' then begin inc(nn);num[nn]:=now;end;
+  while nn>1 do calc;
+  writeln(num[1]);
+end.
