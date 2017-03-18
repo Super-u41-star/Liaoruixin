@@ -1,0 +1,27 @@
+var
+n,i,j,sum,len:longint;
+a:array [0..32768] of string;
+temp:string;
+
+begin
+  while not eof do
+    begin
+      inc(n);
+      readln(a[n]);
+    end;
+  for i:=1 to n-1 do
+    for j:=i+1 to n do
+      if a[i]>a[j] then
+      begin
+        temp:=a[i];a[i]:=a[j];a[j]:=temp;
+      end;
+  sum:=1;
+  for i:=1 to n do
+    begin
+      j:=1;
+      len:=length(a[i-1]);
+      while (a[i][j]=a[i-1][j]) and (j<=len) do inc(j);
+      sum:=sum+length(a[i])-j+1;
+    end;
+  writeln(sum);
+end.
