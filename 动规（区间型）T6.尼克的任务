@@ -1,0 +1,21 @@
+var
+n,k,i,j:longint;
+f,s,t:array [0..10001] of longint;
+begin
+  readln(n,k);
+  for i:=1 to k do
+    readln(s[i],t[i]);
+  j:=k;
+  for i:=n downto 1 do
+    if s[j]<>i then f[i]:=f[i+1]+1//如果此点没有卡再时间上，则延续上一点的值
+    else
+    begin
+      while s[j]=i do
+        begin
+          if f[s[j]+t[j]]>f[i] then f[i]:=f[s[j]+t[j]];
+          j:=j-1;
+//DP转移方程
+        end;
+    end;
+  writeln(f[1]);
+end.
