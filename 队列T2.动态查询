@@ -1,0 +1,25 @@
+var
+l,r,t,x,tt,last:longint;
+q,a:array [0..1000001] of longint;
+flag,space:char;
+begin
+  l:=1;r:=0;last:=0;tt:=0;
+  while not eof do
+    begin
+      read(flag);
+      if flag='Q' then begin if l<=r then writeln(a[q[l]]) else writeln(-1);end;
+      if flag='C' then
+      begin
+        inc(tt);
+        read(space,a[tt]);
+        while (a[tt]>a[q[r]]) and (l<=r) do dec(r);
+        inc(r);
+        q[r]:=tt;
+      end;
+      if flag='G' then
+      begin
+        inc(last);
+        while (q[l]<=last) and (l<=r) do inc(l);
+      end;
+    end;
+end.
