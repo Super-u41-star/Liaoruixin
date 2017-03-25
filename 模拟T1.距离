@@ -1,0 +1,12 @@
+var
+n,i,j:longint;
+s:int64;
+a:array [0..10001] of longint;
+begin
+  readln(n);
+  for i:=1 to n do readln(a[i]);
+  for i:=1 to n do
+    for j:=1 to n do
+      s:=s+abs(a[i]-a[j]);
+  writeln(s);
+end.
