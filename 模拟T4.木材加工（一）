@@ -1,0 +1,20 @@
+var
+n,m,i,s,c,x,a:longint;
+y:boolean;
+l:array [0..100001] of longint;
+begin
+  readln(n,m);
+  y:=false;
+  for i:=1 to n do
+    begin
+      read(l[i]);
+      s:=s+l[i];
+    end;
+  for x:=s div m downto 1 do
+    begin
+      c:=0;
+      for i:=1 to n do c:=c+l[i] div x;
+      if c=m then begin write(x);y:=true;break;end;
+    end;
+  if y=false then writeln(0);
+end.
