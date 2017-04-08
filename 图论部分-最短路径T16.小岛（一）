@@ -1,0 +1,55 @@
+{Floyd版}
+var
+n,m,i,j,k,x,y,q:longint;
+a:array [0..2001,0..2001] of longint;
+begin
+  readln(n,m);
+  for i:=1 to m do
+    begin
+      readln(x,y);
+      a[x,y]:=1;
+    end;
+  for k:=1 to n do
+    for i:=1 to n do
+      for j:=1 to n do
+        if (a[i,j]=0) and (a[i,k]=1) and (a[k,j]=1) then a[i,j]:=1;
+  readln(q);
+  for i:=1 to q do
+    begin
+      readln(x,y);
+      if a[x,y]=1 then writeln('YES') else writeln('NO');
+    end;
+end.
+-------------------------------------------------------------------------------------------------
+{Dijkstra版}
+var
+i,j,k:longint;
+min,m,n,num,x,t,s,point,y,z:int64;
+f,flag:array [0..1006] of int64;
+a:array [0..1005,0..1005] of int64;
+begin
+  readln(n,m);
+  for i:=0 to n do
+	for j:=0 to n do a[i,j]:=999999999;
+  for i:=1 to m do
+	begin
+      read(num);
+      if num=1 then begin read(x,y);z:=1;if z<a[x,y] then begin a[x,y]:=z;a[y,x]:=z;end;end
+	  else begin read(s,t);
+	 fillchar(flag,sizeof(flag),0);
+  fillchar(f,sizeof(f),0);
+  for k:=1 to n do f[k]:=a[s,k];
+  flag[s]:=1;
+  for k:=2 to n do
+	begin
+      min:=999999998;point:=0;
+	  for j:=1 to n do
+	    if (flag[j]=0) and (f[j]<min) then begin min:=f[j];point:=j;end;
+	  flag[point]:=1;
+	  for j:=1 to n do
+		if (f[point]+a[point,j]<f[j]) then f[j]:=f[point]+a[point,j];
+	end;
+  if f[t]>=999999999 then writeln('NO') else writeln('YES');
+  end;
+  end;
+end.
