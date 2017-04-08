@@ -1,0 +1,19 @@
+uses math;
+var
+n,m,i,j,minn:longint;
+d,c:array [0..2001] of longint;
+f:array [0..2001,0..2001] of longint;
+begin
+  readln(n,m);
+  for i:=0 to 1001 do for j:=0 to 1001 do f[i,j]:=maxlongint div 10;
+  for i:=1 to n do readln(d[i]);
+  for i:=1 to m do readln(c[i]);
+  for i:=0 to m do f[0,i]:=0;
+  for i:=1 to n do
+    for j:=i to m-n+i do
+    f[i,j]:=min(f[i-1,j-1]+d[i]*c[j],f[i,j-1]);
+  minn:=maxlongint;
+  for i:=n to m do
+  if f[n,i]<minn then minn:=f[n,i];
+  writeln(minn);
+end.
