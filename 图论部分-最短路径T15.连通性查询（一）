@@ -1,0 +1,21 @@
+var
+n,m,i,j,k,x,y,q:longint;
+a:array [0..2001,0..2001] of longint;
+begin
+  readln(n,m);
+  for i:=1 to m do
+    begin
+      readln(x,y);
+      a[x,y]:=1;
+    end;
+  for k:=1 to n do
+    for i:=1 to n do
+      for j:=1 to n do
+        if (a[i,j]=0) and (a[i,k]=1) and (a[k,j]=1) then a[i,j]:=1;
+  readln(q);
+  for i:=1 to q do
+    begin
+      readln(x,y);
+      if a[x,y]=1 then writeln('YES') else writeln('NO');
+    end;
+end.
