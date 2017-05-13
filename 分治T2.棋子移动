@@ -1,0 +1,37 @@
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+
+void move(int k)
+{
+	if(k==4)
+	{
+		cout<<"4,5-->9,10\n";
+		cout<<"8,9-->4,5\n";
+		cout<<"2,3-->8,9\n";
+		cout<<"7,8-->2,3\n";
+		cout<<"1,2-->7,8\n";
+	}
+	else
+	{
+	cout<<k<<','<<k+1<<"-->"<<2*k+1<<','<<2*k+2<<"\n";
+	cout<<2*k-1<<','<<2*k<<"-->"<<k<<','<<k+1<<"\n";
+	move(k-1);	
+    }
+}
+int main()
+{
+	/*freopen("piece.in","r",stdin);
+	freopen("piece.ans","w",stdout);*/
+	int n;
+	cin>>n;
+	move(n);
+	return 0;
+}
+-----------------------------------------------------------------
+思路如下：
+强调一遍，遇到这种类型的题，你需要选择一些简单的样例手工模拟以期寻找到规律，
+这道题目有个模拟图，
+模拟出来后，就可以寻找到规律，
+每次做到为k的数，都需要和2k，2k+1联系起来
+找规律
