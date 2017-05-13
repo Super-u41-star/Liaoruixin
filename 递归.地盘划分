@@ -1,0 +1,76 @@
+/*朴素算法*/
+#include<bits/stdc++.h>
+using namespace std;
+int s;
+int z(int a,int b)
+{
+	if(a==b) return 1; 
+	else
+	if(a<b)
+	{
+		b-=a;
+		s=z(a,b)+1;
+		return s;
+	}
+	else
+	{
+		a-=b;
+		s=z(a,b)+1;
+		return s;
+	}
+}
+int main()
+{
+	/*freopen("territory.in","r",stdin);
+	freopen("territory.ans","w",stdout);*/
+	int x,y;
+	cin>>x>>y;
+	cout<<z(x,y)<<endl;
+	return 0;
+}
+朴素算法的思路不用细讲，
+写起来真的很简单，质朴亲切的简单！
+每次找到较短的那条边作为正方形边长，两条腿走路，OK
+但是由于递归层数过多，导致栈溢出，崩溃。。。。。
+--------------------------------------------------------------------
+/*优化后算法*/
+#include<bits/stdc++.h>
+using namespace std;
+int s;
+int z(int a,int b)
+{
+	if((a!=0)&&(b!=0))//
+	{
+	if(a==b) return 1; //如果a=b，说明能够构成一个正方形
+	else
+	if(a<b)
+	{
+		s=z(a,b%a)+b/a;// 整除计算，能构成b/a个边长为a的正方形
+		b=b%a;//取余数
+		return s;
+	}
+	else
+	{
+		s=z(a%b,b)+a/b;
+		a=a%b;//同理
+		return s;
+	}
+    }
+    return 0;//此句必写，因为这句不同于过程，要返回一个零，以防出现a或b为0，而返回随机值的情况
+}
+int main()
+{
+	/*freopen("territory.in","r",stdin);
+	freopen("territory.ans","w",stdout);*/
+	int x,y;
+	cin>>x>>y;//读入长和宽
+	cout<<z(x,y)<<endl;//代入函数中进行计算
+	return 0;
+}
+思路和上面朴素是相同的，只不过写法多了一些优化
+举个例子，
+a是1，b是1000000000
+那么要减多少次1(a)才能使ab相等啊。。。。
+但是我们完全可以使用——模和整除的关系！
+b去整除a，得出的肯定是边长为a的正方形共有多少个
+b再去模a，得出的肯定是b边还剩多少，搞定！
