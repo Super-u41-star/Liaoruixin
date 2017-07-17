@@ -1,0 +1,33 @@
+#include<bits/stdc++.h>
+using namespace std;
+struct NOD{
+int w,p,q,c;
+}a[100005];
+int nod(NOD X,NOD Y){
+    return X.p<Y.p;
+}
+int main()
+{
+    int n,m,k,t,i,j,ma=0;
+    cin>>n>>m>>k>>t;
+    for (i=1;i<=100005;i++)
+    {
+        a[i].p=0;a[i].q=0;a[i].c=0;
+    }
+    for(i=1;i<=k;i++)
+    {
+        cin>>a[i].p>>a[i].q>>a[i].c;//读入横纵坐标和值
+    }
+    sort(a+1,a+k+1,nod);//初始化排序，为后面动规的大小顺序做准备
+    a[1].w=a[1].c;
+    for(i=1;i<=k;i++)
+    {
+        a[i].w=a[i].c;//初始赋值，如果不写50分。
+        for(int j=0;j<=i-1;j++)
+          if(abs(a[j].q-a[i].q)<=t*abs(a[i].p-a[j].p))//枚举ij两点看是否能达到
+          a[i].w=max(a[i].w,a[j].w+a[i].c);//更新
+    }
+    for(int i=1;i<=k;i++)
+    ma=max(a[i].w,ma);//输出最大的
+    cout<<ma;
+}
