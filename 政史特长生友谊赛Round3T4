@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int INF=0x3f3f3f3f;
+int f[3100][3100]; 
+struct sh
+{
+	int h,w;
+}a[150];
+bool cmp(sh a,sh b)
+{
+	return a.h>b.h;
+}
+int main()
+{
+	int n,i,j,z,t,w=0,s=0;
+	cin>>n;
+	for(i=0;i<n;i++) { cin>>a[i].h>>a[i].w;s+=a[i].w;}//读入，算总长
+	sort(a,a+n,cmp);//排序
+	memset(f,INF,sizeof(f));//初始化
+	f[0][0]=0;
+	for(z=1;z<n;z++)
+	for(i=s;i>=0;i--)//i,j枚举二三两层最大高度
+	for(j=s;j>=0;j--)
+	if(f[i][j]!=INF)
+	{
+	if(i==0)
+    f[i+a[z].w][j]=min(f[i+a[z].w][j],f[i][j]+a[z].h);
+    else
+    f[i+a[z].w][j]=min(f[i+a[z].w][j],f[i][j]);
+    if(j==0)
+    f[i][j+a[z].w]=min(f[i][j+a[z].w],f[i][j]+a[z].h);
+    else
+    f[i][j+a[z].w]=min(f[i][j+a[z].w],f[i][j]);//分情况刷新
+    }
+    t=INF;
+    for(i=1;i<=s;i++)
+    for(j=1;j<=s;j++)
+     if(f[i][j]!=INF)
+     {
+     w=max(i,j);
+     w=max(w,s-i-j);
+     t=min(t,(f[i][j]+a[0].h)*w);//计算结果
+     }
+     cout<<t;
+     return 0;
+}
+
