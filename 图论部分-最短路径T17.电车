@@ -1,0 +1,92 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+#define mem(a,b) memset(a,b,sizeof(a));
+using namespace std;
+const int MAX_N=107;
+const int MAX_M=10007;
+const int INF=0x3f3f3f3f;
+
+struct node{
+	int v,w,next;
+}e[MAX_M];
+bool inq[MAX_N];
+int dis[MAX_N],p[MAX_N];
+int n,a,b,eid;
+
+void init()
+{
+	mem(dis,0x3f);
+	mem(inq,0);
+	mem(e,0);
+	mem(p,-1);
+	eid=0; 
+}
+
+void insert(int u,int v,int w)
+{
+	e[eid].v=v;
+	e[eid].w=w;
+	e[eid].next=p[u];
+	p[u]=eid++;
+}
+
+void SPFA(int x)
+{
+	dis[x]=0;
+	queue<int> q;
+	q.push(x);
+	inq[x]=1;
+	while(!q.empty())
+	{
+		int u=q.front();
+		q.pop();
+		inq[u]=0;
+		for(int j=p[u];~j;j=e[j].next)
+		{
+			int v=e[j].v;
+			if(dis[v]>dis[u]+e[j].w)
+			{
+				dis[v]=dis[u]+e[j].w;
+				if(!inq[v])
+				{
+					inq[v]=1;
+					q.push(v);
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	cin>>n>>a>>b;
+	init();
+	for(int i=1;i<=n;i++)
+	{
+		int k,u;
+		cin>>k;
+		for(int j=1;j<=k;j++)
+		{
+			cin>>u;
+			if(j!=1)
+			{
+				insert(i,u,1);
+			}
+			else
+			{
+				insert(i,u,0);
+			}
+		}
+	}
+	SPFA(a);
+	if(dis[b]!=INF)
+	{
+		cout<<dis[b]<<endl;
+	}
+	else
+	{
+		cout<<-1<<endl;
+	}
+	return 0;
+}
