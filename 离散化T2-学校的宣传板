@@ -1,0 +1,58 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<map>
+#define mem(a,b) memset(a,b,sizeof(a))
+using namespace std;
+const int MAX_N=1e4+7;
+int n,w;
+struct node{
+	int x,y;
+}num[MAX_N];
+map<int,int> mp;
+int tp[MAX_N*2];
+bool vis[MAX_N*2];
+
+void init()
+{
+	mem(vis,0);
+}
+
+int main()
+{
+	cin>>n>>w;
+	init();
+	for(int i=0;i<n;i++)
+	{
+		cin>>num[i].x>>num[i].y;
+		tp[i*2]=num[i].x;
+		tp[i*2+1]=num[i].y;
+	}
+	sort(tp,tp+n*2);
+	int m=unique(tp,tp+n*2)-tp;
+	for(int i=0;i<m;i++)
+	{
+		mp[tp[i]]=i+1;
+	}
+	int ans=n;
+	for(int i=n-1;i>=0;i--)
+	{
+		num[i].x=mp[num[i].x];
+		num[i].y=mp[num[i].y];
+		bool ok=false; 
+		for(int j=num[i].x;j<=num[i].y;j++)
+		{
+			if(!vis[j])
+			{
+				vis[j]=1;
+				ok=true;
+			}
+		}
+		if(!ok)
+		{
+			ans--;
+		}
+	}
+	cout<<ans<<endl;
+	return 0;
+}
