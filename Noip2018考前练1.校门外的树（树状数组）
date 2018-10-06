@@ -1,0 +1,52 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+const int MAX_N=5e5+7;
+
+int n,m;
+int cl[MAX_N],cr[MAX_N];
+
+int lowbit(int x)
+{
+	return x&(-x);
+}
+
+void modify(int c[],int x)
+{
+	for(;x<=n;x+=lowbit(x))
+	{
+		c[x]+=1;
+	}
+}
+
+int query(int c[],int x)
+{
+	int sum=0;
+	for(;x;x-=lowbit(x))
+	{
+		sum+=c[x];
+	}
+	return sum;
+}
+
+
+int main()
+{
+	scanf("%d%d",&n,&m);
+	for(int i=0;i<m;i++)
+	{
+		int flag,l,r;
+		scanf("%d%d%d",&flag,&l,&r);
+		if(flag==1)
+		{
+			modify(cl,r);
+			modify(cr,l);
+		}
+		else
+		{
+			cout<<query(cr,r)-query(cl,l-1)<<endl;
+		}
+	}
+	return 0;
+}
