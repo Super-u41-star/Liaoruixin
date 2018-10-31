@@ -1,0 +1,77 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#define mem(a,b) memset(a,b,sizeof a)
+using namespace std;
+
+const int cap=5e5+10;
+const int MAX_N=510;
+int dist[MAX_N][MAX_N];
+char map[MAX_N][MAX_N];
+int n,m,front,rear;
+pair<int,int> que[2*cap];
+
+void init()
+{
+	mem(dist,-1);
+	dist[0][0]=0;
+}
+
+bool valid(int x,int y)
+{
+	return x>=0&&x<=n&&y>=0&&y<=m;
+}
+
+void que_add(int x,int y,int v)
+{
+	if(dist[x][y]<0||v<dist[x][y])
+	{
+		dist[x][y]=v;
+		if(front==rear||v>dist[que[front].first][que[front].second])
+		que[rear++]=make_pair(x,y);//插入队尾
+		else que[--front]=make_pair(x,y);//插入队头，注意front和rear的写法，--与++的先后顺序
+	}
+}
+
+int main()
+{
+	scanf("%d%d",&n,&m);
+	init();
+	if((n+m)%2)
+	{
+		printf("NO SOLUTION\n");//行列相加为奇数必然无解，此处可以手动模拟
+		return 0;
+	}
+	for(int i=0;i<n;i++)
+	{
+		scanf("%s",map[i]);
+	}
+	front=rear=cap;
+	que[rear++]=make_pair(0,0);
+	while(front!=rear)
+	{
+		int x=que[front].first,y=que[front].second;front++;
+		if(valid(x-1,y-1))
+		{
+			if(map[x-1][y-1]=='\\') que_add(x-1,y-1,dist[x][y]);
+			else que_add(x-1,y-1,dist[x][y]+1);
+		}
+		if(valid(x+1,y-1))
+		{
+			if(map[x][y-1]=='/') que_add(x+1,y-1,dist[x][y]);
+			else que_add(x+1,y-1,dist[x][y]+1);
+		}
+		if(valid(x-1,y+1))
+		{
+			if(map[x-1][y]=='/') que_add(x-1,y+1,dist[x][y]);
+			else que_add(x-1,y+1,dist[x][y]+1);
+		}
+		if(valid(x+1,y+1))
+		{
+			if(map[x][y]=='\\') que_add(x+1,y+1,dist[x][y]);
+			else que_add(x+1,y+1,dist[x][y]+1);
+		}
+	}
+	printf("%d\n",dist[n][m]);
+	return 0;
+}
